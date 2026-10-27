@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b5d">
+<title>NGP 생산관리</title>
+<style>
+:root {
+  --navy:#123b5d;
+  --blue:#1769aa;
+  --bg:#f3f6f9;
+  --ink:#182533;
+  --muted:#627284;
+  --line:#dce4ec;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;
+}
+header {
+  background:var(--navy);
+  color:white;
+  padding:24px 18px;
+}
+.wrap, main { max-width:900px; margin:auto; }
+.eyebrow {
+  font-size:13px;
+  letter-spacing:.08em;
+  opacity:.8;
+  font-weight:750;
+}
+h1 { font-size:30px; margin:6px 0; }
+header p { color:#d9e7f2; margin:0; line-height:1.5; }
+main { padding:18px 14px 38px; }
+.tabs {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:15px;
+}
+.tab {
+  border:1px solid var(--line);
+  background:white;
+  border-radius:13px;
+  padding:15px 8px;
+  font-size:17px;
+  font-weight:800;
+  color:var(--navy);
+  cursor:pointer;
+}
+.tab.active { background:var(--blue); color:white; }
+.panel { display:none; }
+.panel.active { display:block; }
+.card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:14px;
+}
+h2 { font-size:21px; margin:0 0 6px; }
+.sub {
+  font-size:14px;
+  color:var(--muted);
+  margin:0 0 18px;
+  line-height:1.55;
+}
+.fields {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+label {
+  display:block;
+  font-size:15px;
+  font-weight:750;
+  margin-bottom:7px;
+}
+input[type=number] {
+  width:100%;
+  font:inherit;
+  font-size:19px;
+  padding:13px 12px;
+  border:1px solid #c7d3df;
+  border-radius:10px;
+}
+.unit {
+  font-size:13px;
+  color:var(--muted);
+  margin-top:5px;
+}
+.speed {
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  margin:14px 0;
+}
+.speed-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.speed-name { font-weight:800; }
+.speed-value {
+  font-size:23px;
+  font-weight:850;
+  color:var(--blue);
+}
+input[type=range] {
+  width:100%;
+  accent-color:var(--blue);
+  margin:13px 0;
+}
+.range-labels {
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:12px;
+}
+.results {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:17px;
+}
+.result {
+  background:#f0f6fb;
+  border-radius:12px;
+  padding:14px;
+  min-width:0;
+}
+.k { font-size:13px; color:var(--muted); font-weight:750; }
+.v {
+  font-size:25px;
+  font-weight:850;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+.u { font-size:13px; color:var(--muted); margin-top:2px; }
+.notice {
+  background:#fff7e8;
+  border:1px solid #f2d7a8;
+  color:#78470b;
+  border-radius:10px;
+  padding:12px;
+  font-size:13px;
+  line-height:1.55;
+  margin-top:14px;
+}
+.note {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-top:14px;
+}
+.primary,.secondary {
+  border-radius:10px;
+  padding:12px 15px;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+}
+.primary {
+  background:var(--blue);
+  border:0;
+  color:white;
+  width:100%;
+  margin-top:14px;
+}
+.secondary {
+  background:#eef3f7;
+  border:1px solid var(--line);
+  color:var(--navy);
+}
+footer {
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  padding:12px 0 22px;
+}
+@media(max-width:540px) {
+  .card { padding:16px; }
+  .result { padding:12px; }
+  .v { font-size:22px; }
+}
+@media(max-width:360px) {
+  .fields,.results { grid-template-columns:1fr; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">NGP · PRODUCTION HELPER</div>
+    <h1>생산관리 계산기</h1>
+    <p>현재 생산량과 목표 수량을 입력해 잔여 생산량과 예상 시간을 확인하세요.</p>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" data-tab="hauni">Hauni 생산</button>
+    <button class="tab" data-tab="pack">갑 포장</button>
+  </div>
+
+  <!-- HAUNI -->
+  <section class="panel active" id="hauni">
+    <div class="card">
+      <h2>Hauni 생산 현황</h2>
+      <p class="sub">
+        KDF에서 만든 더블랭스가 MSM으로 이어지는
+        하나의 생산 라인으로 계산합니다.
+      </p>
+
+      <div class="fields">
+        <div>
+          <label for="hCurrent">현재 생산량</label>
+          <input id="hCurrent" type="number" min="0"
+                 placeholder="예: 120">
+          <div class="unit">상자</div>
+        </div>
+        <div>
+          <label for="hTarget">목표 생산량</label>
+          <input id="hTarget" type="number" min="0"
+                 placeholder="예: 200">
+          <div class="unit">상자</div>
+        </div>
+      </div>
+
+      <div class="speed">
+        <div class="speed-top">
+          <span class="speed-name">KDF 속도</span>
+          <span class="speed-value" id="kdfValue">4,500</span>
+        </div>
+        <input id="kdfSpeed" type="range"
+               min="4500" max="5000" step="100" value="4500">
+        <div class="range-labels">
+          <span>4,500</span><span>5,000 더블랭스/분</span>
+        </div>
+      </div>
+
+      <div class="speed">
+        <div class="speed-top">
+          <span class="speed-name">MSM 속도</span>
+          <span class="speed-value" id="msmValue">9,000</span>
+        </div>
+        <input id="msmSpeed" type="range"
+               min="9000" max="10000" step="100" value="9000">
+        <div class="range-labels">
+          <span>9,000</span><span>10,000 스틱/분</span>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="result">
+          <div class="k">남은 생산량</div>
+          <div class="v" id="hRemain">—</div>
+          <div class="u">상자</div>
+        </div>
+        <div class="result">
+          <div class="k">라인 유효 속도</div>
+          <div class="v" id="hRate">—</div>
+          <div class="u">스틱/분</div>
+        </div>
+        <div class="result">
+          <div class="k">추가 매질트레이</div>
+          <div class="v" id="hTrays">—</div>
+          <div class="u">개</div>
+        </div>
+        <div class="result">
+          <div class="k">예상 추가 시간</div>
+          <div class="v" id="hTime">—</div>
+          <div class="u">시간·분</div>
+        </div>
+      </div>
+
+      <div class="notice" id="hNotice">
+        현재 생산량과 목표 생산량을 입력하세요.
+      </div>
+      <p class="note">
+        계산 기준: 1상자 = 50보루 × 10갑 × 20스틱 = 10,000스틱.
+        더블랭스 1개 = 스틱 2개. 매질트레이 1개당 KDF 약 4분 가동.
+        실제 생산 정지 및 속도 변동은 반영하지 않는 이론상 예상값입니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- PACKAGING -->
+  <section class="panel" id="pack">
+    <div class="card">
+      <h2>갑 포장 생산 현황</h2>
+      <p class="sub">
+        기준 속도는 분당 450갑입니다.
+        시작 시각 입력 없이 잔여 소요 시간을 계산합니다.
+      </p>
+
+      <div class="fields">
+        <div>
+          <label for="pCurrent">현재 생산량</label>
+          <input id="pCurrent" type="number" min="0"
+                 placeholder="예: 30">
+          <div class="unit">상자</div>
+        </div>
+        <div>
+          <label for="pTarget">목표 생산량</label>
+          <input id="pTarget" type="number" min="0"
+                 placeholder="예: 80">
+          <div class="unit">상자</div>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="result">
+          <div class="k">남은 생산량</div>
+          <div class="v" id="pRemain">—</div>
+          <div class="u">상자</div>
+        </div>
+        <div class="result">
+          <div class="k">남은 갑 수</div>
+          <div class="v" id="pPacks">—</div>
+          <div class="u">갑</div>
+        </div>
+        <div class="result">
+          <div class="k">예상 소요 시간</div>
+          <div class="v" id="pTime">—</div>
+          <div class="u">분당 450갑 기준</div>
+        </div>
+        <div class="result">
+          <div class="k">기준 속도</div>
+          <div class="v">450</div>
+          <div class="u">갑/분 · 고정</div>
+        </div>
+      </div>
+
+      <div class="notice" id="pNotice">
+        공통 설정에서 상자당 갑 수를 등록해 주세요.
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="panel" id="settings">
+    <div class="card">
+      <h2>공통 기준 설정</h2>
+      <p class="sub">
+        실제 현장 기준을 최초 한 번 등록합니다.
+        저장 후에는 매번 입력할 필요가 없습니다.
+      </p>
+      <label for="sPacks">상자당 갑 수</label>
+      <input id="sPacks" type="number" min="1" step="1"
+             placeholder="실제 기준 입력">
+      <div class="unit">갑/상자 · 포장 계산용</div>
+      <button class="primary" id="saveSettings">공통 기준 저장</button>
+      <p class="note" id="saveMessage" aria-live="polite">
+        실제 상자당 갑 수를 입력한 뒤 저장하세요.
+      </p>
+    </div>
+  </section>
+
+  <button class="secondary" id="settingsButton">⚙ 공통 기준 설정</button>
+  <footer>NGP 생산관리 · 웹사이트 시제품</footer>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let settings = { packsPerBox: "" };
+
+try {
+  const saved = localStorage.getItem("ngpProductionSettings");
+  if (saved) settings = {...settings, ...JSON.parse(saved)};
+} catch(e) {}
+
+$("sPacks").value = settings.packsPerBox || "";
+
+function num(id) {
+  const value = $(id).value.trim();
+  return value === "" ? null : Number(value);
+}
+
+function fmt(value) {
+  return Number(value).toLocaleString("ko-KR", {
+    maximumFractionDigits: 2
+  });
+}
+
+function duration(minutes) {
+  if (!Number.isFinite(minutes) || minutes < 0) return "—";
+  const total = Math.ceil(minutes);
+  const hours = Math.floor(total / 60);
+  const mins = total % 60;
+  return hours ? `${hours}시간 ${mins}분` : `${mins}분`;
+}
+
+function remaining(currentId, targetId) {
+  const current = num(currentId);
+  const target = num(targetId);
+
+  if (current === null || target === null ||
+      current < 0 || target < 0) return null;
+
+  return Math.max(0, target - current);
+}
+
+function calcHauni() {
+  const left = remaining("hCurrent", "hTarget");
+  const kdf = Number($("kdfSpeed").value);
+  const msm = Number($("msmSpeed").value);
+
+  $("kdfValue").textContent = fmt(kdf);
+  $("msmValue").textContent = fmt(msm);
+
+  // KDF 더블랭스 1개 = 스틱 2개
+  // 연결 라인은 두 공정 중 처리량이 낮은 쪽 기준
+  const effectiveRate = Math.min(kdf * 2, msm);
+  const sticksPerTray = effectiveRate * 4;
+
+  $("hRemain").textContent = left === null ? "—" : fmt(left);
+  $("hRate").textContent = fmt(effectiveRate);
+
+  if (left === null) {
+    $("hTrays").textContent = "—";
+    $("hTime").textContent = "—";
+    $("hNotice").textContent =
+      "현재 생산량과 목표 생산량을 입력하세요.";
+    return;
+  }
+
+  const remainingSticks = left * 10000;
+  const trays = Math.ceil(remainingSticks / sticksPerTray);
+
+  $("hTrays").textContent = fmt(trays);
+  $("hTime").textContent = duration(remainingSticks / effectiveRate);
+  $("hNotice").textContent =
+    `현재 속도 기준 이론상 매질트레이당 약 ` +
+    `${fmt(sticksPerTray / 10000)}상자 분량입니다. ` +
+    `트레이 수는 올림 계산했습니다.`;
+}
+
+function calcPack() {
+  const left = remaining("pCurrent", "pTarget");
+  const packsPerBox = Number(settings.packsPerBox);
+
+  $("pRemain").textContent = left === null ? "—" : fmt(left);
+
+  if (left === null) {
+    $("pPacks").textContent = "—";
+    $("pTime").textContent = "—";
+    $("pNotice").textContent =
+      "현재 생산량과 목표 생산량을 입력하세요.";
+    return;
+  }
+
+  if (packsPerBox > 0) {
+    const packs = left * packsPerBox;
+    $("pPacks").textContent = fmt(packs);
+    $("pTime").textContent = duration(packs / 450);
+    $("pNotice").textContent =
+      "분당 450갑 기준 예상값입니다. 정지 및 제품 교체 시간은 제외됩니다.";
+  } else {
+    $("pPacks").textContent = "기준 필요";
+    $("pTime").textContent = "—";
+    $("pNotice").textContent =
+      "공통 기준 설정에서 상자당 갑 수를 등록해 주세요.";
+  }
+}
+
+function showPanel(id) {
+  document.querySelectorAll(".tab").forEach(button => {
+    button.classList.toggle("active", button.dataset.tab === id);
+  });
+  document.querySelectorAll(".panel").forEach(panel => {
+    panel.classList.toggle("active", panel.id === id);
+  });
+}
+
+document.querySelectorAll(".tab").forEach(button => {
+  button.addEventListener("click", () => showPanel(button.dataset.tab));
+});
+
+$("settingsButton").addEventListener("click", () => {
+  showPanel("settings");
+  $("settings").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+$("saveSettings").addEventListener("click", () => {
+  const packs = num("sPacks");
+
+  if (packs !== null &&
+      (!Number.isInteger(packs) || packs <= 0)) {
+    $("saveMessage").textContent =
+      "상자당 갑 수는 1 이상의 정수로 입력하세요.";
+    return;
+  }
+
+  settings = {packsPerBox: packs === null ? "" : String(packs)};
+
+  try {
+    localStorage.setItem(
+      "ngpProductionSettings",
+      JSON.stringify(settings)
+    );
+    $("saveMessage").textContent =
+      "공통 기준을 이 브라우저에 저장했습니다.";
+  } catch(e) {
+    $("saveMessage").textContent =
+      "브라우저에서 저장을 허용하지 않아 기준값을 저장하지 못했습니다.";
+  }
+
+  calcPack();
+});
+
+["hCurrent","hTarget"].forEach(id =>
+  $(id).addEventListener("input", calcHauni)
+);
+
+["pCurrent","pTarget"].forEach(id =>
+  $(id).addEventListener("input", calcPack)
+);
+
+["kdfSpeed","msmSpeed"].forEach(id =>
+  $(id).addEventListener("input", calcHauni)
+);
+
+calcHauni();
+calcPack();
+</script>
+</body>
+</html>
