@@ -19,15 +19,12 @@
   font-family:Arial,"Noto Sans KR",sans-serif;
 }
 * {box-sizing:border-box}
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-}
+body {margin:0;background:var(--bg);color:var(--text)}
+
 header {
   background:linear-gradient(120deg,#102d50,#1b4c79);
   color:white;
-  padding:28px 20px;
+  padding:27px 20px;
 }
 .container {
   width:min(100% - 32px,960px);
@@ -43,9 +40,9 @@ header {
   color:#c4d7e9;
   margin-top:5px;
 }
-.hero {margin-top:30px}
+.hero {margin-top:27px}
 .hero h1 {
-  font-size:30px;
+  font-size:29px;
   margin:0;
 }
 .hero p {
@@ -53,11 +50,7 @@ header {
   font-size:13px;
 }
 main {padding:24px 0 40px}
-.layout {
-  display:grid;
-  grid-template-columns:1.08fr .92fr;
-  gap:16px;
-}
+
 .card {
   background:white;
   border:1px solid var(--line);
@@ -77,6 +70,8 @@ main {padding:24px 0 40px}
   float:right;
 }
 .field {margin-bottom:17px}
+.field:last-child {margin-bottom:0}
+
 label {
   display:block;
   font-size:13px;
@@ -101,6 +96,7 @@ label small {
 }
 input {
   width:100%;
+  min-width:0;
   border:0;
   outline:0;
   background:transparent;
@@ -108,11 +104,34 @@ input {
   font-size:19px;
   font-weight:bold;
   color:var(--text);
-  min-width:0;
 }
 .unit {
   font-size:12px;
   color:var(--muted);
+  white-space:nowrap;
+}
+
+.goal-card {
+  border:2px solid #2875bd;
+  background:linear-gradient(135deg,#fff,#f0f6fd);
+  padding:22px;
+}
+.goal-card h2 {
+  font-size:17px;
+  margin-bottom:7px;
+}
+.goal-description {
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:16px;
+}
+.goal-card input {font-size:27px}
+.goal-card .input-wrap {background:white}
+
+.layout {
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:16px;
 }
 .fixed-list {
   display:grid;
@@ -135,6 +154,7 @@ input {
   font-size:20px;
   margin-top:5px;
 }
+
 .result {
   background:linear-gradient(155deg,#102d50,#194b78);
   color:white;
@@ -150,9 +170,7 @@ input {
   margin:10px 0 5px;
   letter-spacing:-2px;
 }
-.big-number small {
-  font-size:17px;
-}
+.big-number small {font-size:17px}
 .result-caption {
   color:#c5d8e9;
   font-size:11px;
@@ -188,7 +206,15 @@ input {
   background:#d8f4e622;
   color:#d9f8e9;
 }
-button {
+.notice.error {
+  background:#ffe0e022;
+  color:#ffd2d2;
+}
+.reset {
+  width:100%;
+  background:white;
+  color:var(--navy);
+  margin-top:17px;
   border:0;
   border-radius:10px;
   padding:14px;
@@ -196,19 +222,14 @@ button {
   font-weight:bold;
   cursor:pointer;
 }
-.reset {
-  width:100%;
-  background:white;
-  color:var(--navy);
-  margin-top:17px;
-}
-button:active {transform:scale(.98)}
+.reset:active {transform:scale(.98)}
 .footnote {
   color:var(--muted);
   font-size:10px;
   line-height:1.6;
   margin-top:12px;
 }
+
 @media(max-width:700px) {
   .layout {grid-template-columns:1fr}
   .hero h1 {font-size:26px}
@@ -227,97 +248,150 @@ button:active {transform:scale(.98)}
 
     <div class="hero">
       <h1>제품 교체 관리</h1>
-      <p>교체 시점까지 필요한 궐련 트레이 투입량을 계산합니다.</p>
+      <p>제품 교체 시점과 궐련 트레이 추가 투입량을 계산합니다.</p>
     </div>
   </div>
 </header>
 
 <main class="container">
 
+<!-- 1. 목표 생산량 -->
+<section class="card goal-card">
+  <span class="step">FIRST INPUT</span>
+  <h2>① 교체까지 목표 생산 상자 수량</h2>
+
+  <div class="goal-description">
+    현재 제품으로 교체 전까지 추가 생산해야 하는 상자 수량을 입력하세요.
+  </div>
+
+  <div class="input-wrap">
+    <input
+      id="goalBoxes"
+      type="number"
+      min="0"
+      step="any"
+      inputmode="decimal"
+      placeholder="예: 150"
+    >
+    <span class="unit">상자</span>
+  </div>
+</section>
+
 <div class="layout">
 
 <div>
 
+<!-- 2. 포장 파트 -->
 <section class="card">
-  <span class="step">STEP 01</span>
-  <h2>포장 파트 기준</h2>
+  <span class="step">STEP 02</span>
+  <h2>411 포장 파트</h2>
 
   <div class="field">
     <label>411 파트 현재 누적 보루 수</label>
+
     <div class="input-wrap">
-      <input id="currentBales" type="number" min="0" step="1" placeholder="예: 1500">
+      <input
+        id="currentBales"
+        type="number"
+        min="0"
+        step="1"
+        inputmode="numeric"
+        placeholder="예: 1500"
+      >
       <span class="unit">보루</span>
     </div>
   </div>
 
+  <div class="footnote">
+    교체 기준 누적 보루 수 = 현재 누적 보루 + 목표 생산 상자 × 50
+  </div>
+</section>
+
+<!-- 3. 공정 재고 -->
+<section class="card">
+  <span class="step">STEP 03</span>
+  <h2>공정 내 현재 재고</h2>
+
   <div class="field">
-    <label>교체까지 남은 생산량</label>
+    <label>
+      VENTIS 스틱 상자 수
+      <small>보관 중인 스틱의 대략적인 상자 수</small>
+    </label>
+
     <div class="input-wrap">
-      <input id="remainingBoxes" type="number" min="0" step="any" placeholder="예: 150">
+      <input
+        id="ventisBoxes"
+        type="number"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="예: 2.5"
+      >
       <span class="unit">상자</span>
     </div>
   </div>
 
-  <div class="footnote">
-    교체 기준 보루 수 = 현재 누적 보루 + 남은 상자 × 50
-  </div>
-</section>
-
-<section class="card">
-  <span class="step">STEP 02</span>
-  <h2>공정 내 현재 재고</h2>
-
   <div class="field">
-    <label>VENTIS 컨테이너 개수 <small>5개 = 0.7상자</small></label>
-    <div class="input-wrap">
-      <input id="ventis" type="number" min="0" step="1" placeholder="예: 15">
-      <span class="unit">개</span>
-    </div>
-  </div>
+    <label>
+      COMP 더블랭스 상자 수
+      <small>보관 중인 더블랭스의 상자 수</small>
+    </label>
 
-  <div class="field">
-    <label>COMP 적재 칸 수 <small>1칸 = 1상자</small></label>
     <div class="input-wrap">
-      <input id="comp" type="number" min="0" step="1" placeholder="예: 3">
-      <span class="unit">칸</span>
+      <input
+        id="comp"
+        type="number"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="예: 3"
+      >
+      <span class="unit">상자</span>
     </div>
   </div>
 </section>
 
+<!-- 4. 고정 재고 -->
 <section class="card">
   <span class="step">AUTO</span>
   <h2>고정 재고 기준</h2>
 
   <div class="fixed-list">
+
     <div class="fixed-item">
       <span>BU</span>
       <strong>2 상자</strong>
     </div>
+
     <div class="fixed-item">
       <span>BF</span>
       <strong>1 상자</strong>
     </div>
+
     <div class="fixed-item">
       <span>KDF RTS</span>
       <strong>4 상자</strong>
     </div>
+
     <div class="fixed-item">
       <span>MAGOMAT RTS</span>
       <strong>20 상자</strong>
     </div>
+
   </div>
 
   <p class="footnote">
-    고정 재고 합계: 27상자<br>
-    VENTIS와 COMP는 입력값에 따라 자동 계산됩니다.
+    고정 재고 합계: 27상자
   </p>
 </section>
 
 </div>
 
+<!-- 계산 결과 -->
 <div>
 
 <section class="card result">
+
   <h2>계산 결과</h2>
 
   <div class="result-label">
@@ -329,7 +403,7 @@ button:active {transform:scale(.98)}
   </div>
 
   <div class="result-caption" id="caption">
-    입력값을 입력하면 자동 계산됩니다.
+    목표 생산량과 현재 재고를 입력해 주세요.
   </div>
 
   <hr class="divider">
@@ -355,17 +429,18 @@ button:active {transform:scale(.98)}
   </div>
 
   <div class="notice" id="notice">
-    411 파트와 교체까지 남은 상자 수를 입력해 주세요.
+    목표 생산량과 현재 재고를 입력해 주세요.
   </div>
 
-  <button class="reset" onclick="resetForm()">
+  <button class="reset" id="resetButton" type="button">
     새 제품 시작
   </button>
+
 </section>
 
 <p class="footnote">
   모든 공정 재고를 가용 재고로 합산합니다.
-  필요 트레이는 소수점 둘째 자리까지 표시합니다.
+  트레이 수량은 소수점 둘째 자리까지 표시합니다.
 </p>
 
 </div>
@@ -373,70 +448,97 @@ button:active {transform:scale(.98)}
 </main>
 
 <script>
+
 const $ = id => document.getElementById(id);
 
 const fields = [
+  "goalBoxes",
   "currentBales",
-  "remainingBoxes",
-  "ventis",
+  "ventisBoxes",
   "comp"
 ];
 
-function number(id) {
-  const value = $(id).value.trim();
-  if (value === "") return null;
+function readNumber(id) {
 
-  const n = Number(value);
+  const raw = $(id).value.trim();
 
-  if (!Number.isFinite(n) || n < 0) return NaN;
+  if (raw === "") return null;
+
+  const n = Number(raw);
+
+  if (!Number.isFinite(n) || n < 0) {
+    return NaN;
+  }
 
   return n;
 }
 
 function format(n, digits=2) {
+
   return Number(n).toLocaleString("ko-KR", {
     maximumFractionDigits:digits
   });
+
+}
+
+function showEmpty() {
+
+  $("trayResult").innerHTML = '— <small>개</small>';
+  $("stockResult").textContent = "— 상자";
+  $("netResult").textContent = "— 상자";
+  $("targetBales").textContent = "— 보루";
+
+  $("caption").textContent =
+    "목표 생산량과 411 보루 수를 입력해 주세요.";
+
+  $("notice").className = "notice";
+
+  $("notice").textContent =
+    "필수 입력값을 입력하면 자동 계산됩니다.";
 }
 
 function calculate() {
 
-  const current = number("currentBales");
-  const remaining = number("remainingBoxes");
-  const ventis = number("ventis");
-  const comp = number("comp");
+  const goal = readNumber("goalBoxes");
+  const current = readNumber("currentBales");
+  const ventis = readNumber("ventisBoxes");
+  const comp = readNumber("comp");
 
   const notice = $("notice");
 
-  const values = [current,remaining,ventis,comp];
+  const values = [goal,current,ventis,comp];
 
+  // 숫자 입력 오류 확인
   if (values.some(v => Number.isNaN(v))) {
-    notice.textContent = "0 이상의 숫자를 입력해 주세요.";
-    return;
-  }
 
-  if (current === null || remaining === null) {
-    $("trayResult").innerHTML = '— <small>개</small>';
-    $("stockResult").textContent = "— 상자";
-    $("netResult").textContent = "— 상자";
-    $("targetBales").textContent = "— 보루";
-    $("caption").textContent = "필수 입력값을 입력하면 자동 계산됩니다.";
-    notice.textContent = "411 파트와 교체까지 남은 상자 수를 입력해 주세요.";
-    return;
-  }
+    showEmpty();
 
-  if (
-    !Number.isInteger(current) ||
-    (ventis !== null && !Number.isInteger(ventis)) ||
-    (comp !== null && !Number.isInteger(comp))
-  ) {
+    notice.className = "notice error";
+
     notice.textContent =
-      "411 보루 수, VENTIS, COMP는 정수로 입력해 주세요.";
+      "0 이상의 올바른 숫자를 입력해 주세요.";
+
     return;
   }
 
-  const v = ventis ?? 0;
-  const c = comp ?? 0;
+  // 필수 입력 확인
+  if (goal === null || current === null) {
+    showEmpty();
+    return;
+  }
+
+  // 411 보루는 정수만 허용
+  if (!Number.isInteger(current)) {
+
+    showEmpty();
+
+    notice.className = "notice error";
+
+    notice.textContent =
+      "411 파트 보루 수는 정수로 입력해 주세요.";
+
+    return;
+  }
 
   // 고정 재고
   const BU = 2;
@@ -445,22 +547,31 @@ function calculate() {
   const MAGOMAT_RTS = 20;
 
   // 가변 재고
-  const VENTIS = v * 0.14;
-  const COMP = c;
+  const VENTIS = ventis ?? 0;
+  const COMP = comp ?? 0;
 
-  // 총 공정 재고
+  // 전체 공정 재고
   const totalStock =
-    BU + BF + KDF_RTS + MAGOMAT_RTS + VENTIS + COMP;
+    BU +
+    BF +
+    KDF_RTS +
+    MAGOMAT_RTS +
+    VENTIS +
+    COMP;
 
   // 교체까지 추가 생산 필요량
-  const netBoxes = Math.max(0, remaining - totalStock);
+  const netBoxes = Math.max(
+    0,
+    goal - totalStock
+  );
 
-  // 궐련 트레이 계산
+  // 추가 투입할 궐련 트레이 수
   const trays = netBoxes / 3.36;
 
   // 411 교체 기준 누적 보루
-  const target = current + remaining * 50;
+  const targetBales = current + goal * 50;
 
+  // 결과 출력
   $("trayResult").innerHTML =
     `${format(trays)} <small>개</small>`;
 
@@ -471,14 +582,15 @@ function calculate() {
     `${format(netBoxes)} 상자`;
 
   $("targetBales").textContent =
-    `${format(target,0)} 보루`;
+    `${format(targetBales,0)} 보루`;
 
-  if (remaining <= totalStock) {
+  // 재고가 충분한 경우
+  if (goal <= totalStock) {
 
-    const surplus = totalStock - remaining;
+    const surplus = totalStock - goal;
 
     $("caption").textContent =
-      "현재 공정 재고로 교체까지 필요한 생산량을 충족합니다.";
+      "현재 공정 재고로 목표 생산량을 충족합니다.";
 
     notice.className = "notice good";
 
@@ -493,24 +605,31 @@ function calculate() {
     notice.className = "notice";
 
     notice.textContent =
-      `411 파트 누적 생산량이 ${format(target,0)}보루에 도달하면 교체 기준입니다.`;
+      `411 파트 누적 생산량이 ${format(targetBales,0)}보루에 도달하면 교체 기준입니다.`;
   }
+
 }
 
+// 입력할 때마다 자동 계산
 fields.forEach(id => {
   $(id).addEventListener("input", calculate);
 });
 
-function resetForm() {
+// 새 제품 시작
+$("resetButton").addEventListener("click", () => {
+
   fields.forEach(id => {
     $(id).value = "";
   });
 
   calculate();
-  $("currentBales").focus();
-}
+
+  $("goalBoxes").focus();
+
+});
 
 calculate();
+
 </script>
 
 </body>
