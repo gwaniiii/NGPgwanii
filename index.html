@@ -1,674 +1,796 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NGP PRODUCTION</title>
+  <meta name="theme-color" content="#172554">
+  <title>NGP Production Manager</title>
 
   <style>
+    :root {
+      --navy: #172554;
+      --navy-dark: #0f1b3d;
+      --blue: #2563eb;
+      --blue-light: #eff6ff;
+      --bg: #f1f5f9;
+      --white: #ffffff;
+      --text: #172033;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --green: #15803d;
+      --red: #dc2626;
+      --radius: 18px;
+      --shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+    }
+
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        "Malgun Gothic", sans-serif;
-      background: #f1f4f8;
-      color: #172337;
-      padding: 20px;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Segoe UI", "Noto Sans KR", sans-serif;
+      padding-bottom: 100px;
     }
 
-    .container {
-      max-width: 900px;
+    button, input {
+      font: inherit;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 620px;
       margin: 0 auto;
+      min-height: 100vh;
     }
 
-    header {
-      background: #14243b;
+    .top-header {
+      background: var(--navy);
       color: white;
-      padding: 25px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
+      padding: 25px 22px 30px;
+      border-radius: 0 0 26px 26px;
     }
 
     .brand {
-      font-size: 23px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 27px;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      background: white;
+      color: var(--navy);
+      border-radius: 12px;
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .brand-name {
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: 1px;
     }
 
-    .subtitle {
-      color: #a9bbd3;
-      font-size: 11px;
-      letter-spacing: 2px;
-      margin-top: 6px;
+    .brand-sub {
+      color: #bfdbfe;
+      font-size: 10px;
+      margin-top: 3px;
+      letter-spacing: 1px;
     }
 
-    .clock {
-      text-align: right;
+    .status {
+      font-size: 10px;
+      color: #bbf7d0;
+      background: rgba(34, 197, 94, .15);
+      padding: 7px 10px;
+      border-radius: 20px;
     }
 
-    .clock-label {
-      color: #a9bbd3;
-      font-size: 12px;
-      margin-bottom: 5px;
-    }
-
-    #currentTime {
-      font-size: 22px;
+    .header-title {
+      font-size: 25px;
       font-weight: 800;
-      font-variant-numeric: tabular-nums;
+      margin-bottom: 8px;
     }
 
-    #currentDate {
-      color: #a9bbd3;
-      font-size: 12px;
-      margin-top: 4px;
+    .header-desc {
+      color: #cbd5e1;
+      font-size: 13px;
     }
 
-    .section {
-      background: white;
-      padding: 22px;
-      border-radius: 15px;
-      margin-bottom: 16px;
-      box-shadow: 0 3px 12px rgba(20, 36, 59, 0.04);
+    main {
+      padding: 20px 16px;
     }
 
-    .section-title {
-      font-size: 16px;
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 5px 2px 13px;
+    }
+
+    .section-heading h2 {
+      font-size: 17px;
+      margin: 0;
       font-weight: 800;
-      margin-bottom: 17px;
+    }
+
+    .section-label {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .8px;
+      font-weight: 700;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 19px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(226,232,240,.8);
+    }
+
+    .goal-card {
+      border: 1px solid #bfdbfe;
+      background: linear-gradient(145deg, #ffffff, #eff6ff);
+    }
+
+    .input-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 750;
+      margin-bottom: 10px;
+    }
+
+    .unit {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .input-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 0 15px;
+      transition: .2s;
     }
 
-    .section-title::before {
-      content: "";
-      width: 4px;
-      height: 17px;
-      background: #2875d0;
-      border-radius: 5px;
+    .input-wrap:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+    }
+
+    .input-wrap input {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 16px 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .input-wrap input::placeholder {
+      color: #cbd5e1;
+    }
+
+    .input-wrap span {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .helper {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 9px;
+      line-height: 1.5;
     }
 
     .input-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
     }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .input-grid .card {
+      margin: 0;
+      padding: 15px;
     }
 
-    label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #536176;
+    .input-grid .input-wrap {
+      padding: 0 10px;
     }
 
-    input {
-      width: 100%;
-      border: 1px solid #dce3ec;
-      border-radius: 9px;
-      padding: 13px;
-      font-size: 16px;
-      outline: none;
-      background: #fbfcfe;
-      color: #172337;
+    .input-grid .input-wrap input {
+      font-size: 19px;
+      padding: 14px 0;
     }
 
-    input:focus {
-      border-color: #2875d0;
-      background: white;
-      box-shadow: 0 0 0 3px rgba(40, 117, 208, 0.1);
-    }
-
-    .hint {
-      font-size: 11px;
-      color: #8995a6;
-    }
-
-    .stock-grid {
+    .stock-list {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
     .stock-item {
-      background: #f3f6fa;
-      border-radius: 10px;
-      padding: 14px 10px;
-      text-align: center;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
     }
 
     .stock-name {
-      color: #69778b;
       font-size: 12px;
-      margin-bottom: 8px;
+      color: var(--muted);
+      margin-bottom: 7px;
+      font-weight: 650;
     }
 
     .stock-value {
-      font-size: 21px;
-      font-weight: 800;
-      color: #1b3555;
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--navy);
     }
 
-    .stock-total {
-      margin-top: 13px;
-      padding: 13px;
-      border-radius: 9px;
-      background: #eaf2fc;
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      font-weight: 700;
+    .stock-value small {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
     }
 
-    .time-card {
-      background: #14243b;
+    .result-card {
+      background: var(--navy);
       color: white;
-      border-radius: 14px;
+      border-radius: 20px;
       padding: 22px;
-      margin-bottom: 16px;
-    }
-
-    .time-heading {
-      color: #b8c8dc;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .time-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
-
-    .time-label {
-      color: #a9bbd3;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
-    .time-value {
-      font-size: 24px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .replacement {
-      border-top: 1px solid rgba(255,255,255,0.15);
-      margin-top: 20px;
-      padding-top: 18px;
-    }
-
-    .replacement .time-value {
-      font-size: 34px;
-      color: #70d6a0;
-    }
-
-    .replacement-date {
-      color: #a9bbd3;
-      font-size: 12px;
-      margin-top: 6px;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .result-item {
-      background: #f3f6fa;
-      padding: 17px;
-      border-radius: 11px;
+      margin-top: 18px;
+      box-shadow: 0 8px 24px rgba(23,37,84,.16);
     }
 
     .result-label {
-      color: #68778c;
       font-size: 12px;
-      margin-bottom: 9px;
+      color: #bfdbfe;
+      font-weight: 700;
+      letter-spacing: .5px;
     }
 
-    .result-value {
-      font-size: 24px;
-      font-weight: 800;
-      color: #1b3555;
-      word-break: break-word;
+    .result-number {
+      font-size: 42px;
+      font-weight: 900;
+      margin: 8px 0 2px;
+      letter-spacing: -1px;
+      overflow-wrap: anywhere;
     }
 
-    .result-unit {
+    .result-number small {
+      font-size: 16px;
+      color: #bfdbfe;
+      letter-spacing: 0;
+    }
+
+    .result-message {
       font-size: 12px;
-      color: #8995a6;
-      margin-left: 3px;
+      color: #cbd5e1;
+      margin-top: 7px;
+      line-height: 1.6;
     }
 
-    .highlight {
-      background: #eaf2fc;
-      border: 1px solid #d6e6fa;
+    .result-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.15);
     }
 
-    .highlight .result-value {
-      color: #1767bd;
+    .detail-label {
+      font-size: 10px;
+      color: #bfdbfe;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 17px;
+      font-weight: 750;
     }
 
     .notice {
-      color: #8995a6;
+      background: #eff6ff;
+      border-radius: 12px;
+      padding: 13px;
+      color: #1e40af;
       font-size: 11px;
-      line-height: 1.6;
+      line-height: 1.7;
       margin-top: 14px;
     }
 
-    .button-area {
+    .action-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-top: 17px;
     }
 
-    button {
-      flex: 1;
-      padding: 15px;
+    .btn {
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
+      padding: 15px;
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 750;
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    .btn:active {
+      transform: scale(.98);
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+      padding-left: 19px;
+      padding-right: 19px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 620px;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 11px 10px calc(11px + env(safe-area-inset-bottom));
+      z-index: 10;
+    }
+
+    .nav-item {
+      border: none;
+      background: none;
+      color: #94a3b8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 650;
       cursor: pointer;
     }
 
-    .reset-button {
-      background: #e1e7ef;
-      color: #35445a;
+    .nav-item .nav-icon {
+      font-size: 20px;
     }
 
-    footer {
-      text-align: center;
-      color: #9aa5b4;
-      font-size: 11px;
-      padding: 10px 0 20px;
+    .nav-item.active {
+      color: var(--blue);
     }
 
-    @media (max-width: 600px) {
-      body {
-        padding: 12px;
-      }
-
-      header {
-        padding: 20px;
-      }
-
-      .brand {
-        font-size: 20px;
-      }
-
-      .section {
-        padding: 18px;
-      }
-
-      .stock-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .time-value {
-        font-size: 20px;
-      }
-
-      .replacement .time-value {
-        font-size: 30px;
-      }
-
-      .result-value {
-        font-size: 21px;
-      }
+    .toast {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 95px;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      z-index: 20;
+      width: max-content;
+      max-width: 90%;
     }
 
-    @media (max-width: 360px) {
-      .input-grid,
-      .result-grid {
+    .toast.show {
+      display: block;
+    }
+
+    @media (max-width: 380px) {
+      main {
+        padding: 16px 12px;
+      }
+
+      .input-grid {
         grid-template-columns: 1fr;
+      }
+
+      .header-title {
+        font-size: 22px;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
+<div class="app">
 
-    <header>
-      <div>
-        <div class="brand">NGP PRODUCTION</div>
-        <div class="subtitle">PRODUCTION CONTROL SYSTEM</div>
-      </div>
-
-      <div class="clock">
-        <div class="clock-label">CURRENT DATE & TIME</div>
-        <div id="currentTime">--:--:--</div>
-        <div id="currentDate">날짜 확인 중</div>
-      </div>
-    </header>
-
-    <section class="section">
-      <div class="section-title">생산 목표 입력</div>
-
-      <div class="input-grid">
-        <div class="input-group">
-          <label for="goal">목표 생산량 (박스)</label>
-          <input
-            type="number"
-            id="goal"
-            min="0"
-            step="1"
-            inputmode="numeric"
-            placeholder="예: 150"
-          >
-          <div class="hint">이번 생산 목표 박스 수</div>
+  <header class="top-header">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="brand-icon">N</div>
+        <div>
+          <div class="brand-name">NGP PRODUCTION</div>
+          <div class="brand-sub">MANAGEMENT SYSTEM</div>
         </div>
+      </div>
+      <div class="status">● SYSTEM READY</div>
+    </div>
 
-        <div class="input-group">
-          <label for="currentBales">411 현재 누적 베일 수</label>
+    <div class="header-title">생산관리 대시보드</div>
+    <div class="header-desc">
+      제품 교체 및 생산 재고 관리 시스템
+    </div>
+  </header>
+
+  <main>
+    <div class="section-heading">
+      <h2>제품 교체 계산</h2>
+      <span class="section-label">PRODUCTION PLANNING</span>
+    </div>
+
+    <!-- 목표 생산량 -->
+    <section class="card goal-card">
+      <div class="input-label">
+        <label for="goalBoxes">① 교체까지 목표 생산량</label>
+        <span class="unit">상자 기준</span>
+      </div>
+
+      <div class="input-wrap">
+        <input
+          id="goalBoxes"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="예: 100"
+          inputmode="decimal"
+        >
+        <span>상자</span>
+      </div>
+
+      <div class="helper">
+        현재 제품에서 교체 시점까지 추가로 생산할 전체 상자 수량
+      </div>
+    </section>
+
+    <div class="section-heading">
+      <h2>생산 및 재고 입력</h2>
+      <span class="section-label">INPUT DATA</span>
+    </div>
+
+    <div class="input-grid">
+      <section class="card">
+        <div class="input-label">
+          <label for="currentBales">② 411 누적 생산량</label>
+        </div>
+        <div class="input-wrap">
           <input
-            type="number"
             id="currentBales"
+            type="number"
             min="0"
             step="1"
+            placeholder="0"
             inputmode="numeric"
-            placeholder="예: 1500"
           >
-          <div class="hint">현재 누적된 베일 수 입력</div>
+          <span>보루</span>
         </div>
-      </div>
-    </section>
+        <div class="helper">현재 누적 계기판 수량</div>
+      </section>
 
-    <section class="section">
-      <div class="section-title">보유 재고 입력</div>
-
-      <div class="input-grid">
-        <div class="input-group">
-          <label for="ventis">VENTIS (박스)</label>
-          <input
-            type="number"
-            id="ventis"
-            min="0"
-            step="1"
-            inputmode="numeric"
-            placeholder="예: 3"
-          >
+      <section class="card">
+        <div class="input-label">
+          <label for="ventisBoxes">③ VENTIS 재고</label>
         </div>
-
-        <div class="input-group">
-          <label for="comp">COMP 더블렝스 (박스)</label>
+        <div class="input-wrap">
           <input
+            id="ventisBoxes"
             type="number"
-            id="comp"
             min="0"
-            step="any"
+            step="0.01"
+            placeholder="0"
             inputmode="decimal"
-            placeholder="예: 3"
           >
+          <span>상자</span>
         </div>
-      </div>
-    </section>
+        <div class="helper">스틱 재고 상자 수량</div>
+      </section>
 
-    <section class="section">
-      <div class="section-title">고정 보유 재고</div>
+      <section class="card">
+        <div class="input-label">
+          <label for="compBoxes">④ COMP 재고</label>
+        </div>
+        <div class="input-wrap">
+          <input
+            id="compBoxes"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="0"
+            inputmode="decimal"
+          >
+          <span>상자</span>
+        </div>
+        <div class="helper">더블렝스 재고 상자 수량</div>
+      </section>
+    </div>
 
-      <div class="stock-grid">
+    <!-- 고정 재고 -->
+    <div class="section-heading" style="margin-top:25px">
+      <h2>공정별 고정 재고</h2>
+      <span class="section-label">FIXED STOCK</span>
+    </div>
+
+    <section class="card">
+      <div class="stock-list">
         <div class="stock-item">
           <div class="stock-name">BU</div>
-          <div class="stock-value">2</div>
+          <div class="stock-value">2 <small>상자</small></div>
         </div>
 
         <div class="stock-item">
           <div class="stock-name">BF</div>
-          <div class="stock-value">1</div>
+          <div class="stock-value">1 <small>상자</small></div>
         </div>
 
         <div class="stock-item">
           <div class="stock-name">KDF RTS</div>
-          <div class="stock-value">4</div>
+          <div class="stock-value">4 <small>상자</small></div>
         </div>
 
         <div class="stock-item">
           <div class="stock-name">MAGOMAT RTS</div>
-          <div class="stock-value">20</div>
+          <div class="stock-value">20 <small>상자</small></div>
         </div>
       </div>
 
-      <div class="stock-total">
-        <span>고정 재고 합계</span>
-        <span>27 박스</span>
+      <div class="helper">
+        고정 재고 합계: 27상자 · 계산 시 자동 반영
       </div>
     </section>
 
-    <section class="time-card">
-      <div class="time-heading">EXPECTED REPLACEMENT TIME</div>
+    <!-- 계산 결과 -->
+    <div class="section-heading">
+      <h2>계산 결과</h2>
+      <span class="section-label">CALCULATION RESULT</span>
+    </div>
 
-      <div class="time-grid">
+    <section class="result-card">
+      <div class="result-label">MAGOMAT 추가 투입 필요 트레이</div>
+
+      <div class="result-number" id="trayResult">
+        0.00 <small>개</small>
+      </div>
+
+      <div class="result-message" id="resultMessage">
+        목표 생산량과 재고를 입력하면 자동으로 계산됩니다.
+      </div>
+
+      <div class="result-details">
         <div>
-          <div class="time-label">현재 시각</div>
-          <div class="time-value" id="timeNow">--:--</div>
+          <div class="detail-label">현재 공정 재고</div>
+          <div class="detail-value" id="totalStock">0.00 상자</div>
         </div>
 
         <div>
-          <div class="time-label">예상 소요시간</div>
-          <div class="time-value" id="duration">-</div>
+          <div class="detail-label">추가 필요 생산량</div>
+          <div class="detail-value" id="netBoxes">0.00 상자</div>
         </div>
-      </div>
 
-      <div class="replacement">
-        <div class="time-label">예상 교체 시각</div>
-        <div class="time-value" id="replacementTime">--:--</div>
-        <div class="replacement-date" id="replacementDate">
-          생산 목표와 재고를 입력해 주세요.
+        <div style="grid-column:1 / -1">
+          <div class="detail-label">411 목표 누적 생산량</div>
+          <div class="detail-value" id="targetBales">0 보루</div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-title">생산 계산 결과</div>
+    <div class="notice">
+      <strong>계산 기준 안내</strong><br>
+      · 1상자 = 50보루<br>
+      · 1트레이 = 3.36상자 생산<br>
+      · 공정 재고는 모두 상자 단위로 합산<br>
+      · 필요 트레이는 소수점 둘째 자리까지 표시하며 올림하지 않음
+    </div>
 
-      <div class="result-grid">
-        <div class="result-item highlight">
-          <div class="result-label">MAGOMAT 추가 필요 트레이</div>
-          <div>
-            <span class="result-value" id="trays">0</span>
-            <span class="result-unit">개</span>
-          </div>
-        </div>
-
-        <div class="result-item">
-          <div class="result-label">전체 보유 재고</div>
-          <div>
-            <span class="result-value" id="totalStock">27</span>
-            <span class="result-unit">박스</span>
-          </div>
-        </div>
-
-        <div class="result-item">
-          <div class="result-label">추가 생산 필요량</div>
-          <div>
-            <span class="result-value" id="netBoxes">0</span>
-            <span class="result-unit">박스</span>
-          </div>
-        </div>
-
-        <div class="result-item">
-          <div class="result-label">411 목표 누적 베일</div>
-          <div>
-            <span class="result-value" id="targetBales">0</span>
-            <span class="result-unit">베일</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="notice">
-        ※ 트레이 1개 생산량은 3.36박스 기준입니다.<br>
-        ※ 예상 소요시간은 시간당 40박스 생산 기준으로 계산합니다.<br>
-        ※ 실제 생산 및 교체 시각은 설비 정지, 대기 시간 등에 따라 달라질 수 있습니다.
-      </div>
-    </section>
-
-    <div class="button-area">
-      <button class="reset-button" onclick="resetAll()">
-        새 제품 시작 · 입력 초기화
+    <div class="action-row">
+      <button class="btn btn-primary" onclick="calculate()">
+        계산하기
+      </button>
+      <button class="btn btn-secondary" onclick="resetForm()">
+        초기화
       </button>
     </div>
 
-    <footer>
-      NGP PRODUCTION CONTROL SYSTEM
-    </footer>
+  </main>
 
-  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showTab('calc', this)">
+      <span class="nav-icon">▦</span>
+      <span>계산</span>
+    </button>
 
-  <script>
-    const $ = (id) => document.getElementById(id);
+    <button class="nav-item" onclick="showTab('history', this)">
+      <span class="nav-icon">◷</span>
+      <span>기록</span>
+    </button>
 
-    const RATE_PER_HOUR = 40;
-    const BOXES_PER_TRAY = 3.36;
+    <button class="nav-item" onclick="showTab('settings', this)">
+      <span class="nav-icon">⚙</span>
+      <span>설정</span>
+    </button>
+  </nav>
 
-    function getNumber(id) {
-      const value = $(id).value;
+  <div class="toast" id="toast"></div>
+</div>
 
-      if (value === "") return 0;
+<script>
+  const $ = (id) => document.getElementById(id);
 
-      const number = Number(value);
-      return Number.isFinite(number) && number >= 0 ? number : 0;
+  const FIXED_STOCK = 27;
+  const BOXES_PER_TRAY = 3.36;
+  const BALES_PER_BOX = 50;
+
+  const inputIds = [
+    "goalBoxes",
+    "currentBales",
+    "ventisBoxes",
+    "compBoxes"
+  ];
+
+  function getNumber(id) {
+    const value = $(id).value.trim();
+    if (value === "") return null;
+
+    const number = Number(value);
+    if (!Number.isFinite(number) || number < 0) return null;
+
+    return number;
+  }
+
+  function formatNumber(value, digits = 2) {
+    return value.toLocaleString("ko-KR", {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits
+    });
+  }
+
+  function calculate() {
+    const goal = getNumber("goalBoxes");
+    const currentBales = getNumber("currentBales");
+    const ventis = getNumber("ventisBoxes");
+    const comp = getNumber("compBoxes");
+
+    if (
+      goal === null ||
+      currentBales === null ||
+      ventis === null ||
+      comp === null
+    ) {
+      showToast("모든 입력값을 올바르게 입력해 주세요.");
+      return;
     }
 
-    function formatNumber(value, decimals = 0) {
-      return value.toLocaleString("ko-KR", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
-      });
+    if (!Number.isInteger(currentBales)) {
+      showToast("411 누적 생산량은 정수로 입력해 주세요.");
+      return;
     }
 
-    function updateClock() {
-      const now = new Date();
+    const targetBales =
+      currentBales + goal * BALES_PER_BOX;
 
-      const time = now.toLocaleTimeString("ko-KR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false
-      });
+    const totalStock =
+      FIXED_STOCK + ventis + comp;
 
-      const shortTime = now.toLocaleTimeString("ko-KR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
+    const netBoxes = Math.max(0, goal - totalStock);
 
-      const date = now.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        weekday: "long"
-      });
+    const trays = netBoxes / BOXES_PER_TRAY;
 
-      $("currentTime").textContent = time;
-      $("currentDate").textContent = date;
-      $("timeNow").textContent = shortTime;
+    $("trayResult").innerHTML =
+      formatNumber(trays) + " <small>개</small>";
 
-      calculate();
+    $("totalStock").textContent =
+      formatNumber(totalStock) + " 상자";
+
+    $("netBoxes").textContent =
+      formatNumber(netBoxes) + " 상자";
+
+    $("targetBales").textContent =
+      formatNumber(targetBales, 0) + " 보루";
+
+    if (netBoxes === 0) {
+      $("resultMessage").textContent =
+        "현재 공정 재고로 목표 생산량을 충족할 수 있습니다. 추가 트레이 투입은 필요하지 않습니다.";
+    } else {
+      $("resultMessage").textContent =
+        "공정 재고를 제외한 추가 생산량을 기준으로 트레이 수량을 계산했습니다.";
     }
+  }
 
-    function calculate() {
-      const goal = getNumber("goal");
-      const currentBales = getNumber("currentBales");
-      const ventis = getNumber("ventis");
-      const comp = getNumber("comp");
-
-      // 고정 재고
-      const fixedStock = 2 + 1 + 4 + 20;
-
-      // 전체 보유 재고
-      const totalStock = fixedStock + ventis + comp;
-
-      // 추가 생산 필요량
-      const netBoxes = Math.max(0, goal - totalStock);
-
-      // MAGOMAT 추가 필요 트레이
-      const trays = netBoxes / BOXES_PER_TRAY;
-
-      // 411 목표 누적 베일
-      const targetBales = currentBales + goal * 50;
-
-      // 시간당 40박스 기준 예상 소요시간
-      const estimatedMinutes = Math.ceil(
-        (netBoxes / RATE_PER_HOUR) * 60
-      );
-
-      const hours = Math.floor(estimatedMinutes / 60);
-      const minutes = estimatedMinutes % 60;
-
-      let durationText = "-";
-
-      if (hours > 0 && minutes > 0) {
-        durationText = `${hours}시간 ${minutes}분`;
-      } else if (hours > 0) {
-        durationText = `${hours}시간`;
-      } else {
-        durationText = `${minutes}분`;
-      }
-
-      // 현재 시각 + 예상 소요시간
-      const now = new Date();
-      const replacement = new Date(
-        now.getTime() + estimatedMinutes * 60 * 1000
-      );
-
-      const replacementTime = replacement.toLocaleTimeString("ko-KR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-
-      const replacementDate = replacement.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        weekday: "long"
-      });
-
-      // 화면 표시
-      $("totalStock").textContent = formatNumber(totalStock, 2);
-      $("netBoxes").textContent = formatNumber(netBoxes);
-      $("trays").textContent = formatNumber(trays, 2);
-      $("targetBales").textContent = formatNumber(targetBales);
-
-      $("duration").textContent = durationText;
-      $("replacementTime").textContent = replacementTime;
-      $("replacementDate").textContent = replacementDate;
-    }
-
-    function resetAll() {
-      $("goal").value = "";
-      $("currentBales").value = "";
-      $("ventis").value = "";
-      $("comp").value = "";
-
-      calculate();
-    }
-
-    // 입력값 변경 시 자동 계산
-    ["goal", "currentBales", "ventis", "comp"].forEach(id => {
-      $(id).addEventListener("input", calculate);
+  function resetForm() {
+    inputIds.forEach(id => {
+      $(id).value = "";
     });
 
-    // 현재 시각 자동 갱신
-    updateClock();
-    setInterval(updateClock, 1000);
-  </script>
+    $("trayResult").innerHTML = '0.00 <small>개</small>';
+    $("totalStock").textContent = "0.00 상자";
+    $("netBoxes").textContent = "0.00 상자";
+    $("targetBales").textContent = "0 보루";
+
+    $("resultMessage").textContent =
+      "목표 생산량과 재고를 입력하면 자동으로 계산됩니다.";
+
+    showToast("입력값이 초기화되었습니다.");
+  }
+
+  function showToast(message) {
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2200);
+  }
+
+  inputIds.forEach(id => {
+    $(id).addEventListener("input", () => {
+      const values = inputIds.map(getNumber);
+
+      if (values.every(value => value !== null) &&
+          Number.isInteger(getNumber("currentBales"))) {
+        calculate();
+      }
+    });
+  });
+
+  function showTab(tab, button) {
+    document.querySelectorAll(".nav-item").forEach(item => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    if (tab === "history") {
+      showToast("계산 기록 기능은 다음 단계에서 추가할게요.");
+    } else if (tab === "settings") {
+      showToast("설정 기능은 다음 단계에서 추가할게요.");
+    } else {
+      showToast("생산 계산 화면입니다.");
+    }
+  }
+</script>
+
 </body>
 </html>
