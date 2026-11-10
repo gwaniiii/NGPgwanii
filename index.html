@@ -2,794 +2,634 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#172554">
-  <title>NGP Production Manager</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102d50">
+<title>NGP Production Manager</title>
 
-  <style>
-    :root {
-      --navy: #172554;
-      --navy-dark: #0f1b3d;
-      --blue: #2563eb;
-      --blue-light: #eff6ff;
-      --bg: #f1f5f9;
-      --white: #ffffff;
-      --text: #172033;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --green: #15803d;
-      --red: #dc2626;
-      --radius: 18px;
-      --shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
-    }
+<style>
+:root {
+  --navy:#102d50;
+  --blue:#2875bd;
+  --bg:#f3f6fa;
+  --text:#172b42;
+  --muted:#6d7e91;
+  --line:#e3eaf1;
+  --green:#16845b;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+}
+* {box-sizing:border-box}
+body {margin:0;background:var(--bg);color:var(--text)}
 
-    * {
-      box-sizing: border-box;
-    }
+header {
+  background:linear-gradient(120deg,#102d50,#1b4c79);
+  color:white;
+  padding:27px 20px;
+}
+.container {
+  width:min(100% - 32px,960px);
+  margin:auto;
+}
+.brand {
+  font-size:14px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+.subtitle {
+  font-size:11px;
+  color:#c4d7e9;
+  margin-top:5px;
+}
+.hero {margin-top:27px}
+.hero h1 {
+  font-size:29px;
+  margin:0;
+}
+.hero p {
+  color:#c9d9e8;
+  font-size:13px;
+}
+main {padding:24px 0 40px}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont,
-        "Segoe UI", "Noto Sans KR", sans-serif;
-      padding-bottom: 100px;
-    }
+.card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 8px 25px rgba(18,45,75,.06);
+}
+.card h2 {
+  font-size:16px;
+  margin:0 0 18px;
+}
+.step {
+  color:var(--blue);
+  font-size:10px;
+  font-weight:bold;
+  float:right;
+}
+.field {margin-bottom:17px}
+.field:last-child {margin-bottom:0}
 
-    button, input {
-      font: inherit;
-    }
+label {
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+label small {
+  color:var(--muted);
+  font-weight:normal;
+}
+.input-wrap {
+  display:flex;
+  align-items:center;
+  border:1px solid #d8e2ec;
+  border-radius:11px;
+  padding:0 13px;
+  background:#fbfdff;
+}
+.input-wrap:focus-within {
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px #2875bd18;
+}
+input {
+  width:100%;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  padding:14px 0;
+  font-size:19px;
+  font-weight:bold;
+  color:var(--text);
+}
+.unit {
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+}
 
-    .app {
-      width: 100%;
-      max-width: 620px;
-      margin: 0 auto;
-      min-height: 100vh;
-    }
+.goal-card {
+  border:2px solid #2875bd;
+  background:linear-gradient(135deg,#fff,#f0f6fd);
+  padding:22px;
+}
+.goal-card h2 {
+  font-size:17px;
+  margin-bottom:7px;
+}
+.goal-description {
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:16px;
+}
+.goal-card input {font-size:27px}
+.goal-card .input-wrap {background:white}
 
-    .top-header {
-      background: var(--navy);
-      color: white;
-      padding: 25px 22px 30px;
-      border-radius: 0 0 26px 26px;
-    }
+.layout {
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:16px;
+}
+.fixed-list {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.fixed-item {
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:13px;
+}
+.fixed-item span {
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+.fixed-item strong {
+  display:block;
+  font-size:20px;
+  margin-top:5px;
+}
 
-    .brand {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 27px;
-    }
+.result {
+  background:linear-gradient(155deg,#102d50,#194b78);
+  color:white;
+}
+.result h2 {color:white}
+.result-label {
+  color:#c5d8e9;
+  font-size:12px;
+}
+.big-number {
+  font-size:50px;
+  font-weight:850;
+  margin:10px 0 5px;
+  letter-spacing:-2px;
+}
+.big-number small {font-size:17px}
+.result-caption {
+  color:#c5d8e9;
+  font-size:11px;
+}
+.divider {
+  border:0;
+  border-top:1px solid #ffffff30;
+  margin:20px 0;
+}
+.metric {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:15px 0;
+  font-size:12px;
+  color:#d4e2ef;
+}
+.metric strong {
+  color:white;
+  font-size:14px;
+  text-align:right;
+}
+.notice {
+  background:#ffffff18;
+  border-radius:10px;
+  padding:13px;
+  font-size:12px;
+  line-height:1.6;
+  color:#e3eff9;
+  margin-top:16px;
+}
+.notice.good {
+  background:#d8f4e622;
+  color:#d9f8e9;
+}
+.notice.error {
+  background:#ffe0e022;
+  color:#ffd2d2;
+}
+.reset {
+  width:100%;
+  background:white;
+  color:var(--navy);
+  margin-top:17px;
+  border:0;
+  border-radius:10px;
+  padding:14px;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.reset:active {transform:scale(.98)}
+.footnote {
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.6;
+  margin-top:12px;
+}
 
-    .brand-left {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      background: white;
-      color: var(--navy);
-      border-radius: 12px;
-      font-size: 21px;
-      font-weight: 900;
-    }
-
-    .brand-name {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-
-    .brand-sub {
-      color: #bfdbfe;
-      font-size: 10px;
-      margin-top: 3px;
-      letter-spacing: 1px;
-    }
-
-    .status {
-      font-size: 10px;
-      color: #bbf7d0;
-      background: rgba(34, 197, 94, .15);
-      padding: 7px 10px;
-      border-radius: 20px;
-    }
-
-    .header-title {
-      font-size: 25px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .header-desc {
-      color: #cbd5e1;
-      font-size: 13px;
-    }
-
-    main {
-      padding: 20px 16px;
-    }
-
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 5px 2px 13px;
-    }
-
-    .section-heading h2 {
-      font-size: 17px;
-      margin: 0;
-      font-weight: 800;
-    }
-
-    .section-label {
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: .8px;
-      font-weight: 700;
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 19px;
-      margin-bottom: 15px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(226,232,240,.8);
-    }
-
-    .goal-card {
-      border: 1px solid #bfdbfe;
-      background: linear-gradient(145deg, #ffffff, #eff6ff);
-    }
-
-    .input-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 750;
-      margin-bottom: 10px;
-    }
-
-    .unit {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .input-wrap {
-      display: flex;
-      align-items: center;
-      background: white;
-      border: 1.5px solid var(--border);
-      border-radius: 13px;
-      padding: 0 15px;
-      transition: .2s;
-    }
-
-    .input-wrap:focus-within {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
-    }
-
-    .input-wrap input {
-      width: 100%;
-      min-width: 0;
-      border: none;
-      outline: none;
-      background: transparent;
-      padding: 16px 0;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--navy);
-    }
-
-    .input-wrap input::placeholder {
-      color: #cbd5e1;
-    }
-
-    .input-wrap span {
-      color: var(--muted);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .helper {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 9px;
-      line-height: 1.5;
-    }
-
-    .input-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 11px;
-    }
-
-    .input-grid .card {
-      margin: 0;
-      padding: 15px;
-    }
-
-    .input-grid .input-wrap {
-      padding: 0 10px;
-    }
-
-    .input-grid .input-wrap input {
-      font-size: 19px;
-      padding: 14px 0;
-    }
-
-    .stock-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .stock-item {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 14px;
-    }
-
-    .stock-name {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 7px;
-      font-weight: 650;
-    }
-
-    .stock-value {
-      font-size: 20px;
-      font-weight: 850;
-      color: var(--navy);
-    }
-
-    .stock-value small {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--muted);
-    }
-
-    .result-card {
-      background: var(--navy);
-      color: white;
-      border-radius: 20px;
-      padding: 22px;
-      margin-top: 18px;
-      box-shadow: 0 8px 24px rgba(23,37,84,.16);
-    }
-
-    .result-label {
-      font-size: 12px;
-      color: #bfdbfe;
-      font-weight: 700;
-      letter-spacing: .5px;
-    }
-
-    .result-number {
-      font-size: 42px;
-      font-weight: 900;
-      margin: 8px 0 2px;
-      letter-spacing: -1px;
-      overflow-wrap: anywhere;
-    }
-
-    .result-number small {
-      font-size: 16px;
-      color: #bfdbfe;
-      letter-spacing: 0;
-    }
-
-    .result-message {
-      font-size: 12px;
-      color: #cbd5e1;
-      margin-top: 7px;
-      line-height: 1.6;
-    }
-
-    .result-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255,255,255,.15);
-    }
-
-    .detail-label {
-      font-size: 10px;
-      color: #bfdbfe;
-      margin-bottom: 5px;
-    }
-
-    .detail-value {
-      font-size: 17px;
-      font-weight: 750;
-    }
-
-    .notice {
-      background: #eff6ff;
-      border-radius: 12px;
-      padding: 13px;
-      color: #1e40af;
-      font-size: 11px;
-      line-height: 1.7;
-      margin-top: 14px;
-    }
-
-    .action-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 17px;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 12px;
-      padding: 15px;
-      font-size: 14px;
-      font-weight: 750;
-      cursor: pointer;
-      transition: .15s;
-    }
-
-    .btn:active {
-      transform: scale(.98);
-    }
-
-    .btn-primary {
-      background: var(--blue);
-      color: white;
-      flex: 1;
-    }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #334155;
-      padding-left: 19px;
-      padding-right: 19px;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 620px;
-      background: rgba(255,255,255,.96);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 11px 10px calc(11px + env(safe-area-inset-bottom));
-      z-index: 10;
-    }
-
-    .nav-item {
-      border: none;
-      background: none;
-      color: #94a3b8;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      font-size: 10px;
-      font-weight: 650;
-      cursor: pointer;
-    }
-
-    .nav-item .nav-icon {
-      font-size: 20px;
-    }
-
-    .nav-item.active {
-      color: var(--blue);
-    }
-
-    .toast {
-      display: none;
-      position: fixed;
-      left: 50%;
-      bottom: 95px;
-      transform: translateX(-50%);
-      background: #0f172a;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 12px;
-      z-index: 20;
-      width: max-content;
-      max-width: 90%;
-    }
-
-    .toast.show {
-      display: block;
-    }
-
-    @media (max-width: 380px) {
-      main {
-        padding: 16px 12px;
-      }
-
-      .input-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header-title {
-        font-size: 22px;
-      }
-    }
-  </style>
+@media(max-width:700px) {
+  .layout {grid-template-columns:1fr}
+  .hero h1 {font-size:26px}
+  .card {padding:17px}
+  .big-number {font-size:44px}
+}
+</style>
 </head>
 
 <body>
-<div class="app">
 
-  <header class="top-header">
-    <div class="brand">
-      <div class="brand-left">
-        <div class="brand-icon">N</div>
-        <div>
-          <div class="brand-name">NGP PRODUCTION</div>
-          <div class="brand-sub">MANAGEMENT SYSTEM</div>
-        </div>
-      </div>
-      <div class="status">● SYSTEM READY</div>
+<header>
+  <div class="container">
+    <div class="brand">NGP PRODUCTION</div>
+    <div class="subtitle">PRODUCTION MANAGEMENT SYSTEM</div>
+
+    <div class="hero">
+      <h1>제품 교체 관리</h1>
+      <p>제품 교체 시점과 궐련 트레이 추가 투입량을 계산합니다.</p>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- 1. 목표 생산량 -->
+<section class="card goal-card">
+  <span class="step">FIRST INPUT</span>
+  <h2>① 교체까지 목표 생산 상자 수량</h2>
+
+  <div class="goal-description">
+    현재 제품으로 교체 전까지 추가 생산해야 하는 상자 수량을 입력하세요.
+  </div>
+
+  <div class="input-wrap">
+    <input
+      id="goalBoxes"
+      type="number"
+      min="0"
+      step="any"
+      inputmode="decimal"
+      placeholder="예: 150"
+    >
+    <span class="unit">상자</span>
+  </div>
+</section>
+
+<div class="layout">
+
+<div>
+
+<!-- 2. 포장 파트 -->
+<section class="card">
+  <span class="step">STEP 02</span>
+  <h2>411 포장 파트</h2>
+
+  <div class="field">
+    <label>411 파트 현재 누적 보루 수</label>
+
+    <div class="input-wrap">
+      <input
+        id="currentBales"
+        type="number"
+        min="0"
+        step="1"
+        inputmode="numeric"
+        placeholder="예: 1500"
+      >
+      <span class="unit">보루</span>
+    </div>
+  </div>
+
+  <div class="footnote">
+    교체 기준 누적 보루 수 = 현재 누적 보루 + 목표 생산 상자 × 50
+  </div>
+</section>
+
+<!-- 3. 공정 재고 -->
+<section class="card">
+  <span class="step">STEP 03</span>
+  <h2>공정 내 현재 재고</h2>
+
+  <div class="field">
+    <label>
+      VENTIS 스틱 상자 수
+      <small>보관 중인 스틱의 대략적인 상자 수</small>
+    </label>
+
+    <div class="input-wrap">
+      <input
+        id="ventisBoxes"
+        type="number"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="예: 2.5"
+      >
+      <span class="unit">상자</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>
+      COMP 더블랭스 상자 수
+      <small>보관 중인 더블랭스의 상자 수</small>
+    </label>
+
+    <div class="input-wrap">
+      <input
+        id="comp"
+        type="number"
+        min="0"
+        step="any"
+        inputmode="decimal"
+        placeholder="예: 3"
+      >
+      <span class="unit">상자</span>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 고정 재고 -->
+<section class="card">
+  <span class="step">AUTO</span>
+  <h2>고정 재고 기준</h2>
+
+  <div class="fixed-list">
+
+    <div class="fixed-item">
+      <span>BU</span>
+      <strong>2 상자</strong>
     </div>
 
-    <div class="header-title">생산관리 대시보드</div>
-    <div class="header-desc">
-      제품 교체 및 생산 재고 관리 시스템
-    </div>
-  </header>
-
-  <main>
-    <div class="section-heading">
-      <h2>제품 교체 계산</h2>
-      <span class="section-label">PRODUCTION PLANNING</span>
+    <div class="fixed-item">
+      <span>BF</span>
+      <strong>1 상자</strong>
     </div>
 
-    <!-- 목표 생산량 -->
-    <section class="card goal-card">
-      <div class="input-label">
-        <label for="goalBoxes">① 교체까지 목표 생산량</label>
-        <span class="unit">상자 기준</span>
-      </div>
-
-      <div class="input-wrap">
-        <input
-          id="goalBoxes"
-          type="number"
-          min="0"
-          step="0.01"
-          placeholder="예: 100"
-          inputmode="decimal"
-        >
-        <span>상자</span>
-      </div>
-
-      <div class="helper">
-        현재 제품에서 교체 시점까지 추가로 생산할 전체 상자 수량
-      </div>
-    </section>
-
-    <div class="section-heading">
-      <h2>생산 및 재고 입력</h2>
-      <span class="section-label">INPUT DATA</span>
+    <div class="fixed-item">
+      <span>KDF RTS</span>
+      <strong>4 상자</strong>
     </div>
 
-    <div class="input-grid">
-      <section class="card">
-        <div class="input-label">
-          <label for="currentBales">② 411 누적 생산량</label>
-        </div>
-        <div class="input-wrap">
-          <input
-            id="currentBales"
-            type="number"
-            min="0"
-            step="1"
-            placeholder="0"
-            inputmode="numeric"
-          >
-          <span>보루</span>
-        </div>
-        <div class="helper">현재 누적 계기판 수량</div>
-      </section>
-
-      <section class="card">
-        <div class="input-label">
-          <label for="ventisBoxes">③ VENTIS 재고</label>
-        </div>
-        <div class="input-wrap">
-          <input
-            id="ventisBoxes"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0"
-            inputmode="decimal"
-          >
-          <span>상자</span>
-        </div>
-        <div class="helper">스틱 재고 상자 수량</div>
-      </section>
-
-      <section class="card">
-        <div class="input-label">
-          <label for="compBoxes">④ COMP 재고</label>
-        </div>
-        <div class="input-wrap">
-          <input
-            id="compBoxes"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0"
-            inputmode="decimal"
-          >
-          <span>상자</span>
-        </div>
-        <div class="helper">더블렝스 재고 상자 수량</div>
-      </section>
+    <div class="fixed-item">
+      <span>MAGOMAT RTS</span>
+      <strong>20 상자</strong>
     </div>
 
-    <!-- 고정 재고 -->
-    <div class="section-heading" style="margin-top:25px">
-      <h2>공정별 고정 재고</h2>
-      <span class="section-label">FIXED STOCK</span>
-    </div>
+  </div>
 
-    <section class="card">
-      <div class="stock-list">
-        <div class="stock-item">
-          <div class="stock-name">BU</div>
-          <div class="stock-value">2 <small>상자</small></div>
-        </div>
+  <p class="footnote">
+    고정 재고 합계: 27상자
+  </p>
+</section>
 
-        <div class="stock-item">
-          <div class="stock-name">BF</div>
-          <div class="stock-value">1 <small>상자</small></div>
-        </div>
-
-        <div class="stock-item">
-          <div class="stock-name">KDF RTS</div>
-          <div class="stock-value">4 <small>상자</small></div>
-        </div>
-
-        <div class="stock-item">
-          <div class="stock-name">MAGOMAT RTS</div>
-          <div class="stock-value">20 <small>상자</small></div>
-        </div>
-      </div>
-
-      <div class="helper">
-        고정 재고 합계: 27상자 · 계산 시 자동 반영
-      </div>
-    </section>
-
-    <!-- 계산 결과 -->
-    <div class="section-heading">
-      <h2>계산 결과</h2>
-      <span class="section-label">CALCULATION RESULT</span>
-    </div>
-
-    <section class="result-card">
-      <div class="result-label">MAGOMAT 추가 투입 필요 트레이</div>
-
-      <div class="result-number" id="trayResult">
-        0.00 <small>개</small>
-      </div>
-
-      <div class="result-message" id="resultMessage">
-        목표 생산량과 재고를 입력하면 자동으로 계산됩니다.
-      </div>
-
-      <div class="result-details">
-        <div>
-          <div class="detail-label">현재 공정 재고</div>
-          <div class="detail-value" id="totalStock">0.00 상자</div>
-        </div>
-
-        <div>
-          <div class="detail-label">추가 필요 생산량</div>
-          <div class="detail-value" id="netBoxes">0.00 상자</div>
-        </div>
-
-        <div style="grid-column:1 / -1">
-          <div class="detail-label">411 목표 누적 생산량</div>
-          <div class="detail-value" id="targetBales">0 보루</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="notice">
-      <strong>계산 기준 안내</strong><br>
-      · 1상자 = 50보루<br>
-      · 1트레이 = 3.36상자 생산<br>
-      · 공정 재고는 모두 상자 단위로 합산<br>
-      · 필요 트레이는 소수점 둘째 자리까지 표시하며 올림하지 않음
-    </div>
-
-    <div class="action-row">
-      <button class="btn btn-primary" onclick="calculate()">
-        계산하기
-      </button>
-      <button class="btn btn-secondary" onclick="resetForm()">
-        초기화
-      </button>
-    </div>
-
-  </main>
-
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="showTab('calc', this)">
-      <span class="nav-icon">▦</span>
-      <span>계산</span>
-    </button>
-
-    <button class="nav-item" onclick="showTab('history', this)">
-      <span class="nav-icon">◷</span>
-      <span>기록</span>
-    </button>
-
-    <button class="nav-item" onclick="showTab('settings', this)">
-      <span class="nav-icon">⚙</span>
-      <span>설정</span>
-    </button>
-  </nav>
-
-  <div class="toast" id="toast"></div>
 </div>
 
+<!-- 계산 결과 -->
+<div>
+
+<section class="card result">
+
+  <h2>계산 결과</h2>
+
+  <div class="result-label">
+    MAGOMAT 추가 궐련 트레이 투입량
+  </div>
+
+  <div class="big-number" id="trayResult">
+    — <small>개</small>
+  </div>
+
+  <div class="result-caption" id="caption">
+    목표 생산량과 현재 재고를 입력해 주세요.
+  </div>
+
+  <hr class="divider">
+
+  <div class="metric">
+    <span>공정 내 총 재고</span>
+    <strong id="stockResult">— 상자</strong>
+  </div>
+
+  <div class="metric">
+    <span>추가 생산 필요량</span>
+    <strong id="netResult">— 상자</strong>
+  </div>
+
+  <div class="metric">
+    <span>411 교체 기준 누적 보루</span>
+    <strong id="targetBales">— 보루</strong>
+  </div>
+
+  <div class="metric">
+    <span>트레이 1개 생산량</span>
+    <strong>3.36상자</strong>
+  </div>
+
+  <div class="notice" id="notice">
+    목표 생산량과 현재 재고를 입력해 주세요.
+  </div>
+
+  <button class="reset" id="resetButton" type="button">
+    새 제품 시작
+  </button>
+
+</section>
+
+<p class="footnote">
+  모든 공정 재고를 가용 재고로 합산합니다.
+  트레이 수량은 소수점 둘째 자리까지 표시합니다.
+</p>
+
+</div>
+</div>
+</main>
+
 <script>
-  const $ = (id) => document.getElementById(id);
 
-  const FIXED_STOCK = 27;
-  const BOXES_PER_TRAY = 3.36;
-  const BALES_PER_BOX = 50;
+const $ = id => document.getElementById(id);
 
-  const inputIds = [
-    "goalBoxes",
-    "currentBales",
-    "ventisBoxes",
-    "compBoxes"
-  ];
+const fields = [
+  "goalBoxes",
+  "currentBales",
+  "ventisBoxes",
+  "comp"
+];
 
-  function getNumber(id) {
-    const value = $(id).value.trim();
-    if (value === "") return null;
+function readNumber(id) {
 
-    const number = Number(value);
-    if (!Number.isFinite(number) || number < 0) return null;
+  const raw = $(id).value.trim();
 
-    return number;
+  if (raw === "") return null;
+
+  const n = Number(raw);
+
+  if (!Number.isFinite(n) || n < 0) {
+    return NaN;
   }
 
-  function formatNumber(value, digits = 2) {
-    return value.toLocaleString("ko-KR", {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits
-    });
-  }
+  return n;
+}
 
-  function calculate() {
-    const goal = getNumber("goalBoxes");
-    const currentBales = getNumber("currentBales");
-    const ventis = getNumber("ventisBoxes");
-    const comp = getNumber("compBoxes");
+function format(n, digits=2) {
 
-    if (
-      goal === null ||
-      currentBales === null ||
-      ventis === null ||
-      comp === null
-    ) {
-      showToast("모든 입력값을 올바르게 입력해 주세요.");
-      return;
-    }
-
-    if (!Number.isInteger(currentBales)) {
-      showToast("411 누적 생산량은 정수로 입력해 주세요.");
-      return;
-    }
-
-    const targetBales =
-      currentBales + goal * BALES_PER_BOX;
-
-    const totalStock =
-      FIXED_STOCK + ventis + comp;
-
-    const netBoxes = Math.max(0, goal - totalStock);
-
-    const trays = netBoxes / BOXES_PER_TRAY;
-
-    $("trayResult").innerHTML =
-      formatNumber(trays) + " <small>개</small>";
-
-    $("totalStock").textContent =
-      formatNumber(totalStock) + " 상자";
-
-    $("netBoxes").textContent =
-      formatNumber(netBoxes) + " 상자";
-
-    $("targetBales").textContent =
-      formatNumber(targetBales, 0) + " 보루";
-
-    if (netBoxes === 0) {
-      $("resultMessage").textContent =
-        "현재 공정 재고로 목표 생산량을 충족할 수 있습니다. 추가 트레이 투입은 필요하지 않습니다.";
-    } else {
-      $("resultMessage").textContent =
-        "공정 재고를 제외한 추가 생산량을 기준으로 트레이 수량을 계산했습니다.";
-    }
-  }
-
-  function resetForm() {
-    inputIds.forEach(id => {
-      $(id).value = "";
-    });
-
-    $("trayResult").innerHTML = '0.00 <small>개</small>';
-    $("totalStock").textContent = "0.00 상자";
-    $("netBoxes").textContent = "0.00 상자";
-    $("targetBales").textContent = "0 보루";
-
-    $("resultMessage").textContent =
-      "목표 생산량과 재고를 입력하면 자동으로 계산됩니다.";
-
-    showToast("입력값이 초기화되었습니다.");
-  }
-
-  function showToast(message) {
-    const toast = $("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
-
-    clearTimeout(window.toastTimer);
-    window.toastTimer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2200);
-  }
-
-  inputIds.forEach(id => {
-    $(id).addEventListener("input", () => {
-      const values = inputIds.map(getNumber);
-
-      if (values.every(value => value !== null) &&
-          Number.isInteger(getNumber("currentBales"))) {
-        calculate();
-      }
-    });
+  return Number(n).toLocaleString("ko-KR", {
+    maximumFractionDigits:digits
   });
 
-  function showTab(tab, button) {
-    document.querySelectorAll(".nav-item").forEach(item => {
-      item.classList.remove("active");
-    });
+}
 
-    button.classList.add("active");
+function showEmpty() {
 
-    if (tab === "history") {
-      showToast("계산 기록 기능은 다음 단계에서 추가할게요.");
-    } else if (tab === "settings") {
-      showToast("설정 기능은 다음 단계에서 추가할게요.");
-    } else {
-      showToast("생산 계산 화면입니다.");
-    }
+  $("trayResult").innerHTML = '— <small>개</small>';
+  $("stockResult").textContent = "— 상자";
+  $("netResult").textContent = "— 상자";
+  $("targetBales").textContent = "— 보루";
+
+  $("caption").textContent =
+    "목표 생산량과 411 보루 수를 입력해 주세요.";
+
+  $("notice").className = "notice";
+
+  $("notice").textContent =
+    "필수 입력값을 입력하면 자동 계산됩니다.";
+}
+
+function calculate() {
+
+  const goal = readNumber("goalBoxes");
+  const current = readNumber("currentBales");
+  const ventis = readNumber("ventisBoxes");
+  const comp = readNumber("comp");
+
+  const notice = $("notice");
+
+  const values = [goal,current,ventis,comp];
+
+  // 숫자 입력 오류 확인
+  if (values.some(v => Number.isNaN(v))) {
+
+    showEmpty();
+
+    notice.className = "notice error";
+
+    notice.textContent =
+      "0 이상의 올바른 숫자를 입력해 주세요.";
+
+    return;
   }
+
+  // 필수 입력 확인
+  if (goal === null || current === null) {
+    showEmpty();
+    return;
+  }
+
+  // 411 보루는 정수만 허용
+  if (!Number.isInteger(current)) {
+
+    showEmpty();
+
+    notice.className = "notice error";
+
+    notice.textContent =
+      "411 파트 보루 수는 정수로 입력해 주세요.";
+
+    return;
+  }
+
+  // 고정 재고
+  const BU = 2;
+  const BF = 1;
+  const KDF_RTS = 4;
+  const MAGOMAT_RTS = 20;
+
+  // 가변 재고
+  const VENTIS = ventis ?? 0;
+  const COMP = comp ?? 0;
+
+  // 전체 공정 재고
+  const totalStock =
+    BU +
+    BF +
+    KDF_RTS +
+    MAGOMAT_RTS +
+    VENTIS +
+    COMP;
+
+  // 교체까지 추가 생산 필요량
+  const netBoxes = Math.max(
+    0,
+    goal - totalStock
+  );
+
+  // 추가 투입할 궐련 트레이 수
+  const trays = netBoxes / 3.36;
+
+  // 411 교체 기준 누적 보루
+  const targetBales = current + goal * 50;
+
+  // 결과 출력
+  $("trayResult").innerHTML =
+    `${format(trays)} <small>개</small>`;
+
+  $("stockResult").textContent =
+    `${format(totalStock)} 상자`;
+
+  $("netResult").textContent =
+    `${format(netBoxes)} 상자`;
+
+  $("targetBales").textContent =
+    `${format(targetBales,0)} 보루`;
+
+  // 재고가 충분한 경우
+  if (goal <= totalStock) {
+
+    const surplus = totalStock - goal;
+
+    $("caption").textContent =
+      "현재 공정 재고로 목표 생산량을 충족합니다.";
+
+    notice.className = "notice good";
+
+    notice.textContent =
+      `추가 트레이 투입은 필요하지 않습니다. 현재 재고가 ${format(surplus)}상자 더 많습니다.`;
+
+  } else {
+
+    $("caption").textContent =
+      "MAGOMAT 추가 투입 예상 트레이 수량입니다.";
+
+    notice.className = "notice";
+
+    notice.textContent =
+      `411 파트 누적 생산량이 ${format(targetBales,0)}보루에 도달하면 교체 기준입니다.`;
+  }
+
+}
+
+// 입력할 때마다 자동 계산
+fields.forEach(id => {
+  $(id).addEventListener("input", calculate);
+});
+
+// 새 제품 시작
+$("resetButton").addEventListener("click", () => {
+
+  fields.forEach(id => {
+    $(id).value = "";
+  });
+
+  calculate();
+
+  $("goalBoxes").focus();
+
+});
+
+calculate();
+
 </script>
 
 </body>
