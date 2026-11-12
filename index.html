@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#102d50">
+
 <title>NGP Production Manager</title>
 
 <style>
@@ -19,8 +20,15 @@
   font-family:Arial,"Noto Sans KR",sans-serif;
 }
 
-* {box-sizing:border-box}
-body {margin:0;background:var(--bg);color:var(--text)}
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+}
 
 header {
   background:linear-gradient(120deg,#102d50,#1b4c79);
@@ -45,7 +53,9 @@ header {
   margin-top:5px;
 }
 
-.hero {margin-top:27px}
+.hero {
+  margin-top:27px;
+}
 
 .hero h1 {
   font-size:29px;
@@ -57,7 +67,9 @@ header {
   font-size:13px;
 }
 
-main {padding:24px 0 40px}
+main {
+  padding:24px 0 40px;
+}
 
 .card {
   background:white;
@@ -80,8 +92,13 @@ main {padding:24px 0 40px}
   float:right;
 }
 
-.field {margin-bottom:17px}
-.field:last-child {margin-bottom:0}
+.field {
+  margin-bottom:17px;
+}
+
+.field:last-child {
+  margin-bottom:0;
+}
 
 label {
   display:block;
@@ -91,8 +108,10 @@ label {
 }
 
 label small {
+  display:block;
   color:var(--muted);
   font-weight:normal;
+  margin-top:4px;
 }
 
 .input-wrap {
@@ -144,8 +163,13 @@ input {
   margin-bottom:16px;
 }
 
-.goal-card input {font-size:27px}
-.goal-card .input-wrap {background:white}
+.goal-card input {
+  font-size:27px;
+}
+
+.goal-card .input-wrap {
+  background:white;
+}
 
 .layout {
   display:grid;
@@ -178,12 +202,44 @@ input {
   margin-top:5px;
 }
 
+/* KDF 손실률 입력 영역 */
+.kdf-field {
+  background:#f5f9fe;
+  border:1px solid #d8e7f5;
+  border-radius:12px;
+  padding:14px;
+  margin-top:20px;
+}
+
+.kdf-field label {
+  color:var(--navy);
+}
+
+.kdf-field .input-wrap {
+  background:white;
+  border-color:#b9cee2;
+}
+
+.kdf-field input {
+  color:var(--blue);
+  font-size:22px;
+}
+
+.kdf-description {
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-top:9px;
+}
+
 .result {
   background:linear-gradient(155deg,#102d50,#194b78);
   color:white;
 }
 
-.result h2 {color:white}
+.result h2 {
+  color:white;
+}
 
 .result-label {
   color:#c5d8e9;
@@ -197,7 +253,9 @@ input {
   letter-spacing:-2px;
 }
 
-.big-number small {font-size:17px}
+.big-number small {
+  font-size:17px;
+}
 
 .result-caption {
   color:#c5d8e9;
@@ -213,6 +271,7 @@ input {
 .metric {
   display:flex;
   justify-content:space-between;
+  align-items:center;
   gap:10px;
   margin:15px 0;
   font-size:12px;
@@ -258,7 +317,9 @@ input {
   cursor:pointer;
 }
 
-.reset:active {transform:scale(.98)}
+.reset:active {
+  transform:scale(.98);
+}
 
 .footnote {
   color:var(--muted);
@@ -268,12 +329,22 @@ input {
 }
 
 @media(max-width:700px) {
-  .layout {grid-template-columns:1fr}
-  .hero h1 {font-size:26px}
-  .card {padding:17px}
-  .big-number {font-size:44px}
-}
+  .layout {
+    grid-template-columns:1fr;
+  }
 
+  .hero h1 {
+    font-size:26px;
+  }
+
+  .card {
+    padding:17px;
+  }
+
+  .big-number {
+    font-size:44px;
+  }
+}
 </style>
 </head>
 
@@ -281,6 +352,7 @@ input {
 
 <header>
   <div class="container">
+
     <div class="brand">NGP PRODUCTION</div>
     <div class="subtitle">PRODUCTION MANAGEMENT SYSTEM</div>
 
@@ -288,6 +360,7 @@ input {
       <h1>제품 교체 관리</h1>
       <p>제품 교체 시점과 궐련 트레이 추가 투입량을 계산합니다.</p>
     </div>
+
   </div>
 </header>
 
@@ -295,7 +368,9 @@ input {
 
 <!-- 1. 목표 생산량 -->
 <section class="card goal-card">
+
   <span class="step">FIRST INPUT</span>
+
   <h2>① 교체까지 목표 생산 상자 수량</h2>
 
   <div class="goal-description">
@@ -313,18 +388,22 @@ input {
     >
     <span class="unit">상자</span>
   </div>
+
 </section>
 
 <div class="layout">
 
 <div>
 
-<!-- 2. 포장 파트 -->
+<!-- 2. 411 포장 파트 -->
 <section class="card">
+
   <span class="step">STEP 02</span>
+
   <h2>411 포장 파트</h2>
 
   <div class="field">
+
     <label>411 파트 현재 누적 보루 수</label>
 
     <div class="input-wrap">
@@ -338,19 +417,25 @@ input {
       >
       <span class="unit">보루</span>
     </div>
+
   </div>
 
   <div class="footnote">
     교체 기준 누적 보루 수 = 현재 누적 보루 + 목표 생산 상자 × 50
   </div>
+
 </section>
 
-<!-- 3. 공정 재고 -->
+<!-- 3. 공정 내 현재 재고 -->
 <section class="card">
+
   <span class="step">STEP 03</span>
+
   <h2>공정 내 현재 재고</h2>
 
+  <!-- VENTIS -->
   <div class="field">
+
     <label>
       VENTIS 스틱 상자 수
       <small>보관 중인 스틱의 상자 수</small>
@@ -367,9 +452,12 @@ input {
       >
       <span class="unit">상자</span>
     </div>
+
   </div>
 
+  <!-- COMP -->
   <div class="field">
+
     <label>
       COMP 더블랭스 상자 수
       <small>보관 중인 더블랭스의 상자 수</small>
@@ -386,36 +474,48 @@ input {
       >
       <span class="unit">상자</span>
     </div>
+
   </div>
 
-  <div class="field">
+  <!-- KDF 적출 손실률 -->
+  <div class="kdf-field">
+
     <label>
       KDF 적출 손실률
-      <small>평균 1% · 공정 손실률에 따라 입력</small>
+      <small>평균 1% · 실제 공정 손실률에 따라 입력</small>
     </label>
 
     <div class="input-wrap">
+
       <input
         id="kdfLossRate"
         type="number"
         min="0"
         max="100"
-        step="1"
-        inputmode="numeric"
+        step="any"
+        inputmode="decimal"
         value="1"
+        placeholder="예: 1"
       >
+
       <span class="unit">%</span>
+
     </div>
 
-    <div class="footnote">
-      KDF 손실률을 반영하여 추가 궐련 트레이 투입량을 계산합니다.
+    <div class="kdf-description">
+      KDF 생산 과정에서 발생하는 손실률을 입력하세요.<br>
+      손실률이 높아질수록 추가 궐련 트레이 투입량이 증가합니다.
     </div>
+
   </div>
+
 </section>
 
 <!-- 4. 고정 재고 -->
 <section class="card">
+
   <span class="step">AUTO</span>
+
   <h2>고정 재고 기준</h2>
 
   <div class="fixed-list">
@@ -445,11 +545,12 @@ input {
   <p class="footnote">
     고정 재고 합계: 27상자
   </p>
+
 </section>
 
 </div>
 
-<!-- 계산 결과 -->
+<!-- 5. 계산 결과 -->
 <div>
 
 <section class="card result">
@@ -486,7 +587,7 @@ input {
   </div>
 
   <div class="metric">
-    <span>손실 반영 후 트레이 1개 생산량</span>
+    <span>트레이 1개당 실제 생산량</span>
     <strong id="yieldResult">3.33상자</strong>
   </div>
 
@@ -501,9 +602,9 @@ input {
 </section>
 
 <p class="footnote">
-  공정 재고는 가용 재고로 합산합니다.
-  최종 트레이 수량은 손실률을 반영한 후 올림 처리합니다.
-  재고 및 생산 필요량은 정수 반올림하여 표시합니다.
+  모든 공정 재고를 가용 재고로 합산합니다.
+  재고 및 추가 생산 필요량은 정수 반올림 표시합니다.
+  트레이 수량은 소수점 발생 시 올림 처리합니다.
 </p>
 
 </div>
@@ -522,6 +623,7 @@ const fields = [
   "kdfLossRate"
 ];
 
+// 숫자 읽기
 function readNumber(id) {
 
   const raw = $(id).value.trim();
@@ -537,25 +639,34 @@ function readNumber(id) {
   return n;
 }
 
-// 정수 반올림 표시
+// 정수 반올림
 function formatInt(n) {
+
   return Math.round(n).toLocaleString("ko-KR");
+
 }
 
-// 생산량 표시: 소수점 둘째 자리
+// 소수점 둘째 자리 표시
 function formatDecimal(n) {
+
   return Number(n).toLocaleString("ko-KR", {
     minimumFractionDigits:2,
     maximumFractionDigits:2
   });
+
 }
 
+// 초기 결과
 function showEmpty() {
 
   $("trayResult").innerHTML = '— <small>개</small>';
+
   $("stockResult").textContent = "— 상자";
+
   $("netResult").textContent = "— 상자";
+
   $("lossResult").textContent = "— %";
+
   $("yieldResult").textContent = "— 상자";
 
   $("caption").textContent =
@@ -565,14 +676,20 @@ function showEmpty() {
 
   $("notice").textContent =
     "필수 입력값을 입력하면 자동 계산됩니다.";
+
 }
 
+// 계산
 function calculate() {
 
   const goal = readNumber("goalBoxes");
+
   const current = readNumber("currentBales");
+
   const ventis = readNumber("ventisBoxes");
+
   const comp = readNumber("comp");
+
   const lossRate = readNumber("kdfLossRate");
 
   const notice = $("notice");
@@ -585,7 +702,7 @@ function calculate() {
     lossRate
   ];
 
-  // 숫자 입력 오류 확인
+  // 숫자 입력 오류
   if (values.some(v => Number.isNaN(v))) {
 
     showEmpty();
@@ -596,6 +713,7 @@ function calculate() {
       "0 이상의 올바른 숫자를 입력해 주세요.";
 
     return;
+
   }
 
   // 필수 입력 확인
@@ -606,7 +724,9 @@ function calculate() {
   ) {
 
     showEmpty();
+
     return;
+
   }
 
   // 411 보루 정수 확인
@@ -620,9 +740,10 @@ function calculate() {
       "411 파트 보루 수는 정수로 입력해 주세요.";
 
     return;
+
   }
 
-  // VENTIS 스틱 상자 수 정수 확인
+  // VENTIS 정수 확인
   if (
     ventis !== null &&
     !Number.isInteger(ventis)
@@ -636,9 +757,10 @@ function calculate() {
       "VENTIS 스틱 상자 수는 정수로 입력해 주세요.";
 
     return;
+
   }
 
-  // KDF 손실률 범위 확인
+  // KDF 손실률 확인
   if (lossRate > 100) {
 
     showEmpty();
@@ -649,6 +771,7 @@ function calculate() {
       "KDF 손실률은 0%부터 100%까지 입력해 주세요.";
 
     return;
+
   }
 
   // 고정 재고
@@ -680,18 +803,21 @@ function calculate() {
   const actualYield =
     3.36 * (1 - lossRate / 100);
 
-  // 추가 투입할 궐련 트레이 수
-  // 소수점 발생 시 무조건 올림
+  // 트레이 올림 계산
   const trays = actualYield > 0
     ? Math.ceil(netBoxes / actualYield)
     : (netBoxes > 0 ? null : 0);
 
   // 결과 출력
   if (trays === null) {
-    $("trayResult").innerHTML = '계산 불가';
+
+    $("trayResult").innerHTML = "계산 불가";
+
     $("caption").textContent =
       "손실률 100%에서는 생산량을 계산할 수 없습니다.";
+
   } else {
+
     $("trayResult").innerHTML =
       `${formatInt(trays)} <small>개</small>`;
 
@@ -699,9 +825,10 @@ function calculate() {
       netBoxes === 0
         ? "현재 공정 재고로 목표 생산량을 충족합니다."
         : "KDF 손실률을 반영한 MAGOMAT 추가 투입 예상 수량입니다.";
+
   }
 
-  // 정수 반올림 출력
+  // 결과 표시
   $("stockResult").textContent =
     `${formatInt(totalStock)} 상자`;
 
@@ -709,13 +836,12 @@ function calculate() {
     `${formatInt(netBoxes)} 상자`;
 
   $("lossResult").textContent =
-    `${formatInt(lossRate)}%`;
+    `${formatDecimal(lossRate)}%`;
 
-  // 트레이 1개당 실제 생산량
   $("yieldResult").textContent =
     `${formatDecimal(actualYield)} 상자`;
 
-  // 재고가 충분한 경우
+  // 재고 충분
   if (goal <= totalStock) {
 
     const surplus = totalStock - goal;
@@ -725,33 +851,44 @@ function calculate() {
     notice.textContent =
       `추가 트레이 투입은 필요하지 않습니다. 현재 재고가 ${formatInt(surplus)}상자 더 많습니다.`;
 
-  } else if (lossRate === 100) {
+  }
+
+  // 손실률 100%
+  else if (lossRate === 100) {
 
     notice.className = "notice error";
 
     notice.textContent =
       "KDF 손실률이 100%이므로 생산 가능한 수량이 없습니다.";
 
-  } else {
+  }
+
+  // 정상 계산
+  else {
 
     notice.className = "notice";
 
     notice.textContent =
-      `KDF 손실률 ${formatInt(lossRate)}%를 반영하여 트레이 투입량을 올림 계산했습니다.`;
+      `KDF 손실률 ${formatDecimal(lossRate)}%를 반영하여 트레이 투입량을 올림 계산했습니다.`;
+
   }
 
 }
 
-// 입력할 때마다 자동 계산
+// 입력할 때마다 실시간 계산
 fields.forEach(id => {
+
   $(id).addEventListener("input", calculate);
+
 });
 
 // 새 제품 시작
 $("resetButton").addEventListener("click", () => {
 
   fields.forEach(id => {
+
     $(id).value = "";
+
   });
 
   // KDF 손실률 기본값 복원
@@ -763,6 +900,7 @@ $("resetButton").addEventListener("click", () => {
 
 });
 
+// 최초 실행
 calculate();
 
 </script>
