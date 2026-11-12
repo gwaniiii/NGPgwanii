@@ -18,6 +18,7 @@
   --green:#16845b;
   font-family:Arial,"Noto Sans KR",sans-serif;
 }
+
 * {box-sizing:border-box}
 body {margin:0;background:var(--bg);color:var(--text)}
 
@@ -26,29 +27,36 @@ header {
   color:white;
   padding:27px 20px;
 }
+
 .container {
   width:min(100% - 32px,960px);
   margin:auto;
 }
+
 .brand {
   font-size:14px;
   font-weight:bold;
   letter-spacing:2px;
 }
+
 .subtitle {
   font-size:11px;
   color:#c4d7e9;
   margin-top:5px;
 }
+
 .hero {margin-top:27px}
+
 .hero h1 {
   font-size:29px;
   margin:0;
 }
+
 .hero p {
   color:#c9d9e8;
   font-size:13px;
 }
+
 main {padding:24px 0 40px}
 
 .card {
@@ -59,16 +67,19 @@ main {padding:24px 0 40px}
   margin-bottom:16px;
   box-shadow:0 8px 25px rgba(18,45,75,.06);
 }
+
 .card h2 {
   font-size:16px;
   margin:0 0 18px;
 }
+
 .step {
   color:var(--blue);
   font-size:10px;
   font-weight:bold;
   float:right;
 }
+
 .field {margin-bottom:17px}
 .field:last-child {margin-bottom:0}
 
@@ -78,10 +89,12 @@ label {
   font-weight:bold;
   margin-bottom:8px;
 }
+
 label small {
   color:var(--muted);
   font-weight:normal;
 }
+
 .input-wrap {
   display:flex;
   align-items:center;
@@ -90,10 +103,12 @@ label small {
   padding:0 13px;
   background:#fbfdff;
 }
+
 .input-wrap:focus-within {
   border-color:var(--blue);
   box-shadow:0 0 0 3px #2875bd18;
 }
+
 input {
   width:100%;
   min-width:0;
@@ -105,6 +120,7 @@ input {
   font-weight:bold;
   color:var(--text);
 }
+
 .unit {
   font-size:12px;
   color:var(--muted);
@@ -116,15 +132,18 @@ input {
   background:linear-gradient(135deg,#fff,#f0f6fd);
   padding:22px;
 }
+
 .goal-card h2 {
   font-size:17px;
   margin-bottom:7px;
 }
+
 .goal-description {
   font-size:12px;
   color:var(--muted);
   margin-bottom:16px;
 }
+
 .goal-card input {font-size:27px}
 .goal-card .input-wrap {background:white}
 
@@ -133,22 +152,26 @@ input {
   grid-template-columns:1.08fr .92fr;
   gap:16px;
 }
+
 .fixed-list {
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
 }
+
 .fixed-item {
   background:#f8fafc;
   border:1px solid var(--line);
   border-radius:11px;
   padding:13px;
 }
+
 .fixed-item span {
   display:block;
   color:var(--muted);
   font-size:11px;
 }
+
 .fixed-item strong {
   display:block;
   font-size:20px;
@@ -159,27 +182,34 @@ input {
   background:linear-gradient(155deg,#102d50,#194b78);
   color:white;
 }
+
 .result h2 {color:white}
+
 .result-label {
   color:#c5d8e9;
   font-size:12px;
 }
+
 .big-number {
   font-size:50px;
   font-weight:850;
   margin:10px 0 5px;
   letter-spacing:-2px;
 }
+
 .big-number small {font-size:17px}
+
 .result-caption {
   color:#c5d8e9;
   font-size:11px;
 }
+
 .divider {
   border:0;
   border-top:1px solid #ffffff30;
   margin:20px 0;
 }
+
 .metric {
   display:flex;
   justify-content:space-between;
@@ -188,11 +218,13 @@ input {
   font-size:12px;
   color:#d4e2ef;
 }
+
 .metric strong {
   color:white;
   font-size:14px;
   text-align:right;
 }
+
 .notice {
   background:#ffffff18;
   border-radius:10px;
@@ -202,14 +234,17 @@ input {
   color:#e3eff9;
   margin-top:16px;
 }
+
 .notice.good {
   background:#d8f4e622;
   color:#d9f8e9;
 }
+
 .notice.error {
   background:#ffe0e022;
   color:#ffd2d2;
 }
+
 .reset {
   width:100%;
   background:white;
@@ -222,7 +257,9 @@ input {
   font-weight:bold;
   cursor:pointer;
 }
+
 .reset:active {transform:scale(.98)}
+
 .footnote {
   color:var(--muted);
   font-size:10px;
@@ -236,6 +273,7 @@ input {
   .card {padding:17px}
   .big-number {font-size:44px}
 }
+
 </style>
 </head>
 
@@ -419,11 +457,6 @@ input {
   </div>
 
   <div class="metric">
-    <span>411 교체 기준 누적 보루</span>
-    <strong id="targetBales">— 보루</strong>
-  </div>
-
-  <div class="metric">
     <span>트레이 1개 생산량</span>
     <strong>3.36상자</strong>
   </div>
@@ -440,7 +473,7 @@ input {
 
 <p class="footnote">
   모든 공정 재고를 가용 재고로 합산합니다.
-  트레이 수량은 소수점 둘째 자리까지 표시합니다.
+  트레이 수량은 소수점이 발생하면 다음 정수로 올림 처리합니다.
 </p>
 
 </div>
@@ -486,7 +519,6 @@ function showEmpty() {
   $("trayResult").innerHTML = '— <small>개</small>';
   $("stockResult").textContent = "— 상자";
   $("netResult").textContent = "— 상자";
-  $("targetBales").textContent = "— 보루";
 
   $("caption").textContent =
     "목표 생산량과 411 보루 수를 입력해 주세요.";
@@ -566,23 +598,18 @@ function calculate() {
   );
 
   // 추가 투입할 궐련 트레이 수
-  const trays = netBoxes / 3.36;
-
-  // 411 교체 기준 누적 보루
-  const targetBales = current + goal * 50;
+  // 소수점이 발생하면 무조건 올림
+  const trays = Math.ceil(netBoxes / 3.36);
 
   // 결과 출력
   $("trayResult").innerHTML =
-    `${format(trays)} <small>개</small>`;
+    `${format(trays, 0)} <small>개</small>`;
 
   $("stockResult").textContent =
     `${format(totalStock)} 상자`;
 
   $("netResult").textContent =
     `${format(netBoxes)} 상자`;
-
-  $("targetBales").textContent =
-    `${format(targetBales,0)} 보루`;
 
   // 재고가 충분한 경우
   if (goal <= totalStock) {
@@ -605,7 +632,7 @@ function calculate() {
     notice.className = "notice";
 
     notice.textContent =
-      `411 파트 누적 생산량이 ${format(targetBales,0)}보루에 도달하면 교체 기준입니다.`;
+      `추가 생산 필요량 ${format(netBoxes)}상자를 기준으로 트레이를 정수 올림 계산했습니다.`;
   }
 
 }
