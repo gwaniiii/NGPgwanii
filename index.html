@@ -387,6 +387,30 @@ input {
       <span class="unit">상자</span>
     </div>
   </div>
+
+  <div class="field">
+    <label>
+      KDF 적출 손실률
+      <small>평균 1% · 공정 손실률에 따라 입력</small>
+    </label>
+
+    <div class="input-wrap">
+      <input
+        id="kdfLossRate"
+        type="number"
+        min="0"
+        max="100"
+        step="1"
+        inputmode="numeric"
+        value="1"
+      >
+      <span class="unit">%</span>
+    </div>
+
+    <div class="footnote">
+      KDF 손실률을 반영하여 추가 궐련 트레이 투입량을 계산합니다.
+    </div>
+  </div>
 </section>
 
 <!-- 4. 고정 재고 -->
@@ -457,8 +481,13 @@ input {
   </div>
 
   <div class="metric">
-    <span>트레이 1개 생산량</span>
-    <strong>3.36상자</strong>
+    <span>KDF 적출 손실률</span>
+    <strong id="lossResult">1%</strong>
+  </div>
+
+  <div class="metric">
+    <span>손실 반영 후 트레이 1개 생산량</span>
+    <strong id="yieldResult">3.33상자</strong>
   </div>
 
   <div class="notice" id="notice">
@@ -472,8 +501,9 @@ input {
 </section>
 
 <p class="footnote">
-  모든 공정 재고를 가용 재고로 합산합니다.
-  계산 결과는 정수로 표시하며, 궐련 트레이는 소수점 발생 시 올림 처리합니다.
+  공정 재고는 가용 재고로 합산합니다.
+  최종 트레이 수량은 손실률을 반영한 후 올림 처리합니다.
+  재고 및 생산 필요량은 정수 반올림하여 표시합니다.
 </p>
 
 </div>
@@ -488,7 +518,8 @@ const fields = [
   "goalBoxes",
   "currentBales",
   "ventisBoxes",
-  "comp"
+  "comp",
+  "kdfLossRate"
 ];
 
 function readNumber(id) {
@@ -511,11 +542,21 @@ function formatInt(n) {
   return Math.round(n).toLocaleString("ko-KR");
 }
 
+// 생산량 표시: 소수점 둘째 자리
+function formatDecimal(n) {
+  return Number(n).toLocaleString("ko-KR", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
 function showEmpty() {
 
   $("trayResult").innerHTML = '— <small>개</small>';
   $("stockResult").textContent = "— 상자";
   $("netResult").textContent = "— 상자";
+  $("lossResult").textContent = "— %";
+  $("yieldResult").textContent = "— 상자";
 
   $("caption").textContent =
     "목표 생산량과 411 보루 수를 입력해 주세요.";
@@ -532,10 +573,17 @@ function calculate() {
   const current = readNumber("currentBales");
   const ventis = readNumber("ventisBoxes");
   const comp = readNumber("comp");
+  const lossRate = readNumber("kdfLossRate");
 
   const notice = $("notice");
 
-  const values = [goal, current, ventis, comp];
+  const values = [
+    goal,
+    current,
+    ventis,
+    comp,
+    lossRate
+  ];
 
   // 숫자 입력 오류 확인
   if (values.some(v => Number.isNaN(v))) {
@@ -551,7 +599,12 @@ function calculate() {
   }
 
   // 필수 입력 확인
-  if (goal === null || current === null) {
+  if (
+    goal === null ||
+    current === null ||
+    lossRate === null
+  ) {
+
     showEmpty();
     return;
   }
@@ -570,7 +623,10 @@ function calculate() {
   }
 
   // VENTIS 스틱 상자 수 정수 확인
-  if (ventis !== null && !Number.isInteger(ventis)) {
+  if (
+    ventis !== null &&
+    !Number.isInteger(ventis)
+  ) {
 
     showEmpty();
 
@@ -578,6 +634,19 @@ function calculate() {
 
     notice.textContent =
       "VENTIS 스틱 상자 수는 정수로 입력해 주세요.";
+
+    return;
+  }
+
+  // KDF 손실률 범위 확인
+  if (lossRate > 100) {
+
+    showEmpty();
+
+    notice.className = "notice error";
+
+    notice.textContent =
+      "KDF 손실률은 0%부터 100%까지 입력해 주세요.";
 
     return;
   }
@@ -607,41 +676,68 @@ function calculate() {
     goal - totalStock
   );
 
-  // 궐련 트레이 수량: 소수점 발생 시 올림
-  const trays = Math.ceil(netBoxes / 3.36);
+  // KDF 손실률 반영
+  const actualYield =
+    3.36 * (1 - lossRate / 100);
 
-  // 결과 출력: 정수만 표시
-  $("trayResult").innerHTML =
-    `${formatInt(trays)} <small>개</small>`;
+  // 추가 투입할 궐련 트레이 수
+  // 소수점 발생 시 무조건 올림
+  const trays = actualYield > 0
+    ? Math.ceil(netBoxes / actualYield)
+    : (netBoxes > 0 ? null : 0);
 
+  // 결과 출력
+  if (trays === null) {
+    $("trayResult").innerHTML = '계산 불가';
+    $("caption").textContent =
+      "손실률 100%에서는 생산량을 계산할 수 없습니다.";
+  } else {
+    $("trayResult").innerHTML =
+      `${formatInt(trays)} <small>개</small>`;
+
+    $("caption").textContent =
+      netBoxes === 0
+        ? "현재 공정 재고로 목표 생산량을 충족합니다."
+        : "KDF 손실률을 반영한 MAGOMAT 추가 투입 예상 수량입니다.";
+  }
+
+  // 정수 반올림 출력
   $("stockResult").textContent =
     `${formatInt(totalStock)} 상자`;
 
   $("netResult").textContent =
     `${formatInt(netBoxes)} 상자`;
 
+  $("lossResult").textContent =
+    `${formatInt(lossRate)}%`;
+
+  // 트레이 1개당 실제 생산량
+  $("yieldResult").textContent =
+    `${formatDecimal(actualYield)} 상자`;
+
   // 재고가 충분한 경우
   if (goal <= totalStock) {
 
     const surplus = totalStock - goal;
-
-    $("caption").textContent =
-      "현재 공정 재고로 목표 생산량을 충족합니다.";
 
     notice.className = "notice good";
 
     notice.textContent =
       `추가 트레이 투입은 필요하지 않습니다. 현재 재고가 ${formatInt(surplus)}상자 더 많습니다.`;
 
-  } else {
+  } else if (lossRate === 100) {
 
-    $("caption").textContent =
-      "MAGOMAT 추가 투입 예상 트레이 수량입니다.";
+    notice.className = "notice error";
+
+    notice.textContent =
+      "KDF 손실률이 100%이므로 생산 가능한 수량이 없습니다.";
+
+  } else {
 
     notice.className = "notice";
 
     notice.textContent =
-      `추가 생산 필요량 ${formatInt(netBoxes)}상자를 기준으로 트레이를 올림 계산했습니다.`;
+      `KDF 손실률 ${formatInt(lossRate)}%를 반영하여 트레이 투입량을 올림 계산했습니다.`;
   }
 
 }
@@ -657,6 +753,9 @@ $("resetButton").addEventListener("click", () => {
   fields.forEach(id => {
     $(id).value = "";
   });
+
+  // KDF 손실률 기본값 복원
+  $("kdfLossRate").value = "1";
 
   calculate();
 
