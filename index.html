@@ -353,7 +353,7 @@ input {
   <div class="field">
     <label>
       VENTIS 스틱 상자 수
-      <small>보관 중인 스틱의 대략적인 상자 수</small>
+      <small>보관 중인 스틱의 상자 수</small>
     </label>
 
     <div class="input-wrap">
@@ -361,9 +361,9 @@ input {
         id="ventisBoxes"
         type="number"
         min="0"
-        step="any"
-        inputmode="decimal"
-        placeholder="예: 2.5"
+        step="1"
+        inputmode="numeric"
+        placeholder="예: 2"
       >
       <span class="unit">상자</span>
     </div>
@@ -462,7 +462,7 @@ input {
   </div>
 
   <div class="notice" id="notice">
-    목표 생산량과 현재 재고를 입력해 주세요.
+    필수 입력값을 입력하면 자동 계산됩니다.
   </div>
 
   <button class="reset" id="resetButton" type="button">
@@ -473,7 +473,7 @@ input {
 
 <p class="footnote">
   모든 공정 재고를 가용 재고로 합산합니다.
-  트레이 수량은 소수점이 발생하면 다음 정수로 올림 처리합니다.
+  계산 결과는 정수로 표시하며, 궐련 트레이는 소수점 발생 시 올림 처리합니다.
 </p>
 
 </div>
@@ -506,12 +506,9 @@ function readNumber(id) {
   return n;
 }
 
-function format(n, digits=2) {
-
-  return Number(n).toLocaleString("ko-KR", {
-    maximumFractionDigits:digits
-  });
-
+// 정수 반올림 표시
+function formatInt(n) {
+  return Math.round(n).toLocaleString("ko-KR");
 }
 
 function showEmpty() {
@@ -538,7 +535,7 @@ function calculate() {
 
   const notice = $("notice");
 
-  const values = [goal,current,ventis,comp];
+  const values = [goal, current, ventis, comp];
 
   // 숫자 입력 오류 확인
   if (values.some(v => Number.isNaN(v))) {
@@ -559,7 +556,7 @@ function calculate() {
     return;
   }
 
-  // 411 보루는 정수만 허용
+  // 411 보루 정수 확인
   if (!Number.isInteger(current)) {
 
     showEmpty();
@@ -568,6 +565,19 @@ function calculate() {
 
     notice.textContent =
       "411 파트 보루 수는 정수로 입력해 주세요.";
+
+    return;
+  }
+
+  // VENTIS 스틱 상자 수 정수 확인
+  if (ventis !== null && !Number.isInteger(ventis)) {
+
+    showEmpty();
+
+    notice.className = "notice error";
+
+    notice.textContent =
+      "VENTIS 스틱 상자 수는 정수로 입력해 주세요.";
 
     return;
   }
@@ -591,25 +601,24 @@ function calculate() {
     VENTIS +
     COMP;
 
-  // 교체까지 추가 생산 필요량
+  // 추가 생산 필요량
   const netBoxes = Math.max(
     0,
     goal - totalStock
   );
 
-  // 추가 투입할 궐련 트레이 수
-  // 소수점이 발생하면 무조건 올림
+  // 궐련 트레이 수량: 소수점 발생 시 올림
   const trays = Math.ceil(netBoxes / 3.36);
 
-  // 결과 출력
+  // 결과 출력: 정수만 표시
   $("trayResult").innerHTML =
-    `${format(trays, 0)} <small>개</small>`;
+    `${formatInt(trays)} <small>개</small>`;
 
   $("stockResult").textContent =
-    `${format(totalStock)} 상자`;
+    `${formatInt(totalStock)} 상자`;
 
   $("netResult").textContent =
-    `${format(netBoxes)} 상자`;
+    `${formatInt(netBoxes)} 상자`;
 
   // 재고가 충분한 경우
   if (goal <= totalStock) {
@@ -622,7 +631,7 @@ function calculate() {
     notice.className = "notice good";
 
     notice.textContent =
-      `추가 트레이 투입은 필요하지 않습니다. 현재 재고가 ${format(surplus)}상자 더 많습니다.`;
+      `추가 트레이 투입은 필요하지 않습니다. 현재 재고가 ${formatInt(surplus)}상자 더 많습니다.`;
 
   } else {
 
@@ -632,7 +641,7 @@ function calculate() {
     notice.className = "notice";
 
     notice.textContent =
-      `추가 생산 필요량 ${format(netBoxes)}상자를 기준으로 트레이를 정수 올림 계산했습니다.`;
+      `추가 생산 필요량 ${formatInt(netBoxes)}상자를 기준으로 트레이를 올림 계산했습니다.`;
   }
 
 }
